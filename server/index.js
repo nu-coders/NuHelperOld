@@ -1,20 +1,5 @@
-// const {db} = require('./firebase');
+const {db} = require('./firebase.js');
 
-// console.log(db);
-const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
-const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
-
-const serviceAccount = require('./servicekey.json');
-const courses = require('./courses.json');
-
-
-initializeApp({
-  credential: cert(serviceAccount)
-});
-
-const db = getFirestore();
-
-module.exports = db;
 
 console.log("hello");
 
