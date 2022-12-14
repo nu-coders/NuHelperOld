@@ -71,12 +71,27 @@ const getAllCourses = async function(){
 }
 
 const getCourseByName = async function(name){
-    const course = await db.collection('courses').where('courseName','==',name).get();
-    console.log(course.id, '=>', course.data());
-    return course.data();
+    let courses = [];
+    const snapshot = await db.collection('courses').where('courseName','==',name).get();
+    snapshot.forEach((course) => {
+        console.log(course.id, '=>', course.data());
+        courses.push(course.data());
+    });    
+    return courses;
+}
+
+const getCourseByCourseId = async function(courseId){
+    let courses = [];
+    const snapshot = await db.collection('courses').where('courseId','==',courseId).get();
+    snapshot.forEach((course) => {
+        console.log(course.id, '=>', course.data());
+        courses.push(course.data());
+    });    
+    return courses;
 }
 
 // getCourseById('0171xiS5gMFioa5016wk');
 //getAllCourses();
-//getCourseByName('Music Appreciation');
+// getCourseByName('Music Appreciation');
+getCourseByCourseId('ARTS105');
 console.log("hrllo");
