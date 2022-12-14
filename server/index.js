@@ -16,6 +16,9 @@ const db = getFirestore();
 
 module.exports = db;
 
+console.log("hello");
+
+
 const addDoc  = async function(){
     const docRef = db.collection('courses').doc();
 
@@ -51,7 +54,7 @@ const coursesUploader = async function(){
     })
 }
 
-const getDoc = async function(id){
+const getCourseById = async function(id){
     const course = await db.collection('courses').doc(id).get();
     console.log(course.id, '=>', course.data());
     return course.data();
@@ -67,6 +70,13 @@ const getAllCourses = async function(){
     return courses;
 }
 
-// getDoc('0171xiS5gMFioa5016wk');
-getAllCourses();
+const getCourseByName = async function(name){
+    const course = await db.collection('courses').where('courseName','==',name).get();
+    console.log(course.id, '=>', course.data());
+    return course.data();
+}
 
+// getCourseById('0171xiS5gMFioa5016wk');
+//getAllCourses();
+//getCourseByName('Music Appreciation');
+console.log("hrllo");
