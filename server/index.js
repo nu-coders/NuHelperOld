@@ -1,9 +1,6 @@
 const {db} = require('./firebase.js');
 
 
-console.log("hello");
-
-
 const addDoc  = async function(){
     const docRef = db.collection('courses').doc();
 
@@ -49,7 +46,7 @@ const getAllCourses = async function(){
     let courses = [];
     const snapshot = await db.collection('courses').get();
     snapshot.forEach((doc) => {
-    console.log(doc.id, '=>', doc.data());
+    //console.log(doc.id, '=>', doc.data());
     courses.push(doc.data());
     });
     return courses;
@@ -78,5 +75,7 @@ const getCourseByCourseId = async function(courseId){
 // getCourseById('0171xiS5gMFioa5016wk');
 //getAllCourses();
 // getCourseByName('Music Appreciation');
-getCourseByCourseId('ARTS105');
-console.log("hrllo");
+// getCourseByCourseId('ARTS105');
+//console.log("hrllo");
+
+module.exports = {getAllCourses, getCourseByCourseId, getCourseById, getCourseByName};
