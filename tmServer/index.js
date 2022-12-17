@@ -6,6 +6,7 @@ const addDoc  = async function(){
 
     await docRef.set({
         test: "test",
+        id: docRef.id
     })  
 } 
 
@@ -38,7 +39,7 @@ const coursesUploader = async function(){
 
 const getCourseById = async function(id){
     const course = await db.collection('courses').doc(id).get();
-    console.log(course.id, '=>', course.data());
+    //console.log(course.id, '=>', course.data());
     return course.data();
 }
 
@@ -56,7 +57,7 @@ const getCourseByName = async function(name){
     let courses = [];
     const snapshot = await db.collection('courses').where('courseName','==',name).get();
     snapshot.forEach((course) => {
-        console.log(course.id, '=>', course.data());
+        //console.log(course.id, '=>', course.data());
         courses.push(course.data());
     });    
     return courses;
@@ -66,16 +67,29 @@ const getCourseByCourseId = async function(courseId){
     let courses = [];
     const snapshot = await db.collection('courses').where('courseId','==',courseId).get();
     snapshot.forEach((course) => {
-        console.log(course.id, '=>', course.data());
+        //console.log(course.id, '=>', course.data());
         courses.push(course.data());
     });    
     return courses;
 }
 
+const getListCoursesByCourseId = async function(coursesId){
+    let allCourses = [];
+    coursesId.map(async(courseId) =>{
+        let courseList = []
+        const snapshot = await db.collection('courses').where('courseId','==',courseId).get();
+        snapshot.forEach((course) => {
+            courseList.push(course.data());
+            console.log(course.data())
+        });    
+        allCourses.push(await courseList);
+    })
+    return await allCourses;
+}
 // getCourseById('0171xiS5gMFioa5016wk');
 //getAllCourses();
 // getCourseByName('Music Appreciation');
 // getCourseByCourseId('ARTS105');
 //console.log("hrllo");
 
-module.exports = {getAllCourses, getCourseByCourseId, getCourseById, getCourseByName};
+module.exports = {getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId};
