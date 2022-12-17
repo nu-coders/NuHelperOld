@@ -43,5 +43,5 @@ app.use((req, res) => {
 });
 
 app.listen(port, () => {
-  console.log("runing");
+  console.log("runing server");
 });
