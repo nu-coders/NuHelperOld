@@ -9,31 +9,37 @@ router.get("/api", (req, res) => {
 });
 router.get("/api/getroom/", (req, res) => {
   // 127.0.0.1:8080/api/getroom/
-  if (req.query.id == null || req.query.id == "") {
+  let id = req.body["id"];
+  if (id == null || id == "") {
     res.status(404).json({ error: "Not a room" });
   } else {
-    res.send({ getroom: req.query.id });
+    res.send({ getroom: id });
   }
 });
 router.get("/api/getrooms/", (req, res) => {
   // http://127.0.0.1:8080/api/getrooms/
-  if (req.query.bu == null || req.query.bu == "") {
+  let building = req.body["building"];
+  if (building == null || building == "") {
     res.status(404).json({ error: "Not a builing" });
   } else {
-    res.send({ getroom: req.query.bu });
+    res.send({ "getrooms": building });
   }
 });
 router.get("/api/roomtable", (req, res) => {
-  if (req.query.id == null || req.query.id == "") {
+  let id = req.body["id"];
+  if (id == null || id == "") {
     res.status(404).json({ error: "Not a room" });
   } else {
-    res.send({ getroom: req.query.id });
+    res.send({ "roomtable": id });
   }
 });
 router.get("/api/whatsin", (req, res) => {
-  console.log(req.body["test"]);
-  res.send("done");
-  // res.send("whatsin");
+  let id = req.body["id"];
+  if (id == null || id == "") {
+    res.status(404).json({ error: "Not a room" });
+  } else {
+    res.send({ "whatsin": id });
+  }
 });
 
 app.use("/", router);
