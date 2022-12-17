@@ -1,0 +1,29 @@
+- id : unique number for each row
+- name : name of course -Data Analysis-
+- code : course code -CSCI322-
+- credit : course credit hours -1.6- 
+- subjectType : subject type in number format defined as following [
+    1 - Lecture -> 0
+    2 - Lab -> 1
+    3 - Tutorial -> 2
+    4 - Project -> 3
+    5 - Thesis -> 4
+]
+- instructor : subject instructor -Mostafa ElAttar-
+- maxSeats : maximum number of seats in a subject -60-
+- seatsLeft : leaft seats count  -15-
+- startTime : start time in as array -[16,29,0]-
+- endTime :  start time in as array -[17,29,0]-
+- startSlot : starting slot as number -5-
+- endSlot : ending slot as number -8-
+- day : subject day represented as number as following [
+    1 - Sunday -> 0
+    2 - Monday -> 1
+    3 - Tuesday -> 2
+    4 - Wednesday -> 3
+    5 - Thursday -> 4
+    6 - Saturday -> 6
+]
+- room : subject room -f36-
+- building : room building -b1-
+- floor : room floor -1- 
