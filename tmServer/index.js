@@ -180,8 +180,8 @@ const createTablesNoChecks = async function(coursesId){
     let coursesOptions = await createCourseOptionsList(coursesId);
     let tablesNoChecks = await cartesian(coursesOptions)
     // console.log(tablesNoChecks.length);
-    console.log(dayjs('10:30 AM', 'h:m a').format('h:m'));
-    console.log()
+    //console.log(dayjs('10:30 AM', 'h:m a').format('h:m'));
+    //console.log()
     // console.log(dayjs('2019-01-25').format('DD/MM/YYYY'));
     // console.log(dayjs('10:30 AM', 'h:m a').isBetween(dayjs('10:30 AM', 'h:m a'), dayjs('12:30 AM', 'h:m a'), '[]'));
 
@@ -189,40 +189,95 @@ const createTablesNoChecks = async function(coursesId){
     const endTime = dayjs('12:30 AM', 'HH:mm').add(1, 'minute');
 
     const testTime1 = dayjs('10:30 AM', 'HH:mm');
-    console.log(testTime1.isBetween(startTime, endTime, 'minute', '[]'));  // false
+    // console.log(testTime1.isBetween(startTime, endTime, 'minute', '[]'));  // false
     
-    for(const course of coursesOptions){
-        console.log(course);
-    }
+    // for(const course of coursesOptions){
+    //     console.log(course);
+    // }
+    //console.log("number of tables created "+ tablesNoChecks.length);	
     return tablesNoChecks;
 }
 
 const removeClashes = async function(coursesId){
+    
     let tableOptions = await createTablesNoChecks(coursesId);
     let cleanTableOptions = [];
     let i=0;
     for(const table of tableOptions){
         let clash = false;
+        //console.log("\n\n\ntable number "+i);
         for(const course of table){
-            let courseStartTime = course.schedule[0].startTime;
-            let courseendTime = course.schedule[0].endTime;
+            let courseStartTime = course.schedule[0].startTime.split(' ')[0];
+            let courseEndTime = course.schedule[0].endTime.split(' ')[0];
             let courseDay = course.schedule[0].dayDesc;
             for(const course2 of table){
-                let courseStartTime2 = course2.schedule[0].startTime;
-                let courseendTime2 = course2.schedule[0].endTime;
+                let courseStartTime2 = course2.schedule[0].startTime.split(' ')[0];
+                let courseEndTime2 = course2.schedule[0].endTime.split(' ')[0];
                 let courseDay2 = course2.schedule[0].dayDesc;
-                if(courseDay==CourseDay2){
-                   if((courseStartTime <= courseEndTime2)  &&  (courseEndTime >= courseStartTime2)){
+                //console.log(courseDay+" "+courseDay2);
+                if(courseDay==courseDay2&&(course!=course2)){
+                    const startTime = dayjs(courseStartTime, 'HH:mm').add(1, 'minute');
+                    const endTime = dayjs(courseEndTime, 'HH:mm').subtract(1, 'minute');
+                    const startTime2 = dayjs(courseStartTime2, 'HH:mm').add(1, 'minute');
+                    const endTime2 = dayjs(courseEndTime2, 'HH:mm').subtract(1, 'minute');
+                    if(startTime.isBetween(startTime2, endTime2, 'minute', '()') || endTime.isBetween(startTime2, endTime2, 'minute', '[]')){
                         clash=true;
-                    } 
+                        //console.log("clash found in table "+course.courseName + "  "+course2.courseName+startTime+" "+endTime+" "+startTime2+" "+endTime2);
+                    }
+
+                //    if((courseStartTime <= courseEndTime2)  &&  (courseEndTime >= courseStartTime2)){
+                //         clash=true;
+                //     } 
                 }
             }
         }
-        if(clash==false){
+        i++;
+        if(!clash){
+            //console.log("valid!!");
             cleanTableOptions.push(table);
         }
     }
-    console.log(i);
+    console.log(cleanTableOptions.length);
+    return cleanTableOptions;
 }
 
-module.exports = {removeClashes,createTablesNoChecks, coursesUploader, getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId, createCourseOptionsList};
+const createTableFiltered = async function(coursesId, filters){
+        let tableOptions = await removeClashes(coursesId);
+        let filteredTableOptions = [];
+        let i=0;
+        for(const table of tableOptions){
+            let isComplying = true;
+            //console.log("\n\n\ntable number "+i);
+            let tableDaysToGo = [];
+            for(const course of table){
+                let courseDay = course.schedule[0].dayDesc;
+                tableDaysToGo.push(courseDay);
+                if(filters.DaysToGo!=null){
+                   if(!filters.DaysToGo.includes(courseDay)){
+                    console.log("not valid days to go"+ courseDay);
+                        isComplying=false;
+                    } 
+                }
+                
+            }
+            i++;
+            let tableDaysToGoUnique = [...new Set(tableDaysToGo)];
+            console.log(tableDaysToGoUnique.length)
+            if(filters.noDays!=null){
+                if(tableDaysToGoUnique.length>filters.noDays){
+                    console.log("not valid number of days");
+                    isComplying=false;
+                }
+            }
+            if(isComplying){
+                console.log("valid!!");
+                filteredTableOptions.push(table);
+            }
+        }
+        console.log(filteredTableOptions.length);
+        return filteredTableOptions;
+    }
+    
+
+
+module.exports = {createTableFiltered,removeClashes,createTablesNoChecks, coursesUploader, getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId, createCourseOptionsList};
