@@ -1,5 +1,5 @@
 const express = require('express');
-const {coursesUploader, getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId, createCourseOptionsList} = require('./index.js');
+const {removeClashes,createTablesNoChecks, coursesUploader, getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId, createCourseOptionsList} = require('./index.js');
 
 const PORT = process.env.PORT || 8080;
 
@@ -33,7 +33,7 @@ app.get('/getListCoursesByCourseId', async(req, res) => {
 app.get('/createTable', async(req, res) => {
     console.log("Req body is %j" , req.body);
     try {   
-        res.send(await createTable(req.body.id));
+        res.send(await removeClashes(req.body.id));
         
     } catch(e) {
         console.log(e);
