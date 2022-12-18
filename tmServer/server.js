@@ -1,5 +1,5 @@
 const express = require('express');
-const {getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId} = require('./index.js');
+const {coursesUploader, getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId, createCourseOptionsList} = require('./index.js');
 
 const PORT = process.env.PORT || 8080;
 
@@ -10,6 +10,10 @@ app.get('/listAllCourses', async(req, res) => {
     res.send(await getAllCourses());
 })
 
+app.get('/uploadAll', async(req, res) => {
+    res.send(await coursesUploader());
+})
+
 app.get('/getCourseById', async(req, res) => {
     console.log("Req body is %j" , req.body);
     res.send(await getCourseByCourseId(req.query.id));
@@ -17,7 +21,24 @@ app.get('/getCourseById', async(req, res) => {
 
 app.get('/getListCoursesByCourseId', async(req, res) => {
     console.log("Req body is %j" , req.body);
-    res.send(await getListCoursesByCourseId(req.body.id));
+    try {   
+        res.send(await getListCoursesByCourseId(req.body.id));
+        
+    } catch(e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+})
+
+app.get('/createTable', async(req, res) => {
+    console.log("Req body is %j" , req.body);
+    try {   
+        res.send(await createTable(req.body.id));
+        
+    } catch(e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
 })
 
 app.listen(PORT, function () {

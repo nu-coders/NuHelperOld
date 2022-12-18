@@ -1,6 +1,6 @@
 const {db} = require('./firebase.js');
 
-
+const courses = require('./courses.json');
 const addDoc  = async function(){
     const docRef = db.collection('courses').doc();
 
@@ -12,7 +12,15 @@ const addDoc  = async function(){
 
 const addDocJson  = async function(course){
     const docRef = db.collection('courses').doc();
+    let sectionLetter = "";
+    let sectionNumber = ""
+    sectionNumber = course.section;
 
+    if(course.eventSubType!="Lecture"&&course.courseType!="Thesis"){
+        console.log(course.eventSubType);
+        sectionLetter = course.section.substring(course.section.length-1,course.section.length);
+        sectionNumber = course.section.substring(0,course.section.length-1);
+    }
     await docRef.set({
         id : docRef.id,
         credits : course.credits,
@@ -25,13 +33,17 @@ const addDocJson  = async function(course){
         seatsLeft: course.seatsLeft,
         section: course.section,
         session: course.session,
-    })  
+        sectionLetter: sectionLetter,
+        sectionNumber: sectionNumber,
+    }).then(()=>{
+        console.log("Uploaded "+ docRef.id);
+    })
 } 
 
 const coursesUploader = async function(){
     courses.map(async(course)=>{
         await addDocJson(course).then(()=>{
-            console.log("done");
+            console.log("Finished Uploading ");
     });
 
     })
@@ -74,22 +86,84 @@ const getCourseByCourseId = async function(courseId){
 }
 
 const getListCoursesByCourseId = async function(coursesId){
+    
+    
     let allCourses = [];
-    coursesId.map(async(courseId) =>{
-        let courseList = []
+    for (const courseId of coursesId){
+        let courses = [];
         const snapshot = await db.collection('courses').where('courseId','==',courseId).get();
-        snapshot.forEach((course) => {
-            courseList.push(course.data());
-            console.log(course.data())
-        });    
-        allCourses.push(await courseList);
-    })
-    return await allCourses;
+        await snapshot.forEach((course) => {
+            courses.push(course.data());
+        }); 
+        allCourses.push(courses);
+    }
+    return allCourses;
 }
-// getCourseById('0171xiS5gMFioa5016wk');
-//getAllCourses();
-// getCourseByName('Music Appreciation');
-// getCourseByCourseId('ARTS105');
-//console.log("hrllo");
 
-module.exports = {getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId};
+
+const getListCoursesByCourseIdSegmented = async function(coursesId){
+    
+    
+    let allCourses = [];
+    for (const courseId of coursesId){
+        let courses = [];
+        const snapshot = await db.collection('courses').where('courseId','==',courseId).get();
+        await snapshot.forEach((course) => {
+            courses.push(course.data());
+        }); 
+        allCourses.push(courses);
+    }
+    return allCourses;
+}
+
+const createCourseOptionsList = async function(coursesId){
+    let coursesList = await getListCoursesByCourseId(coursesId);
+    finalCoursesOutput=[];
+    //console.log(coursesList);
+    for (const course of coursesList){
+        let singleCourseFinal = [];
+        //Get Number of Sections
+        //Looping on a single CourseID list
+        let sectionNumbers = [];
+        for (const section of course){
+            //console.log(section);
+            sectionNumbers.push(section.sectionNumber);
+        }
+        let uniqueSectionNumbers = [...new Set(sectionNumbers)];
+        console.log(uniqueSectionNumbers);
+        for (const sectionNumber of uniqueSectionNumbers){
+            let sectionCourses = [];
+            for (const section of course){
+                if(section.sectionNumber==sectionNumber){
+                    sectionCourses.push(section);
+                }
+            }
+            //console.log(sectionCourses);
+            let segmentedCourseByType = [];
+            let courseTypes = [];
+            for (const section of sectionCourses){
+                courseTypes.push(section.courseType);
+            }
+            let uniqueCourseTypes = [...new Set(courseTypes)];
+            //console.log(uniqueCourseTypes);
+            for (const courseType of uniqueCourseTypes){
+                let courseTypeCourses = [];
+                for (const section of sectionCourses){
+                    if(section.courseType==courseType){
+                        courseTypeCourses.push(section);
+                    }
+                }
+                //console.log(courseTypeCourses);
+                segmentedCourseByType.push(courseTypeCourses);
+            }
+            console.log("//////////////////////////");
+            console.log(segmentedCourseByType);
+            singleCourseFinal.push(segmentedCourseByType);
+        }
+        finalCoursesOutput.push(singleCourseFinal);
+    }
+
+    return finalCoursesOutput;
+}
+
+module.exports = {coursesUploader, getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId, createCourseOptionsList};
