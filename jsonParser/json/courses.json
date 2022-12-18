@@ -1524,9 +1524,9 @@
       }
     ],
     "seatsLeft": 22,
-    "section": "01A",
-    "sectionNumber": "01",
-    "sectionLetter": "A"
+    "section": "01",
+    "sectionNumber": "0",
+    "sectionLetter": "1"
   },
   {
     "credits": "6.00",
@@ -9569,7 +9569,7 @@
     "seatsLeft": 0,
     "section": "01A1",
     "sectionNumber": "01A",
-    "sectionLetter": "A1"
+    "sectionLetter": "1"
   },
   {
     "credits": "0.00",

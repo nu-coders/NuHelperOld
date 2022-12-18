@@ -1,4 +1,3 @@
-a = 1
 # slots = {
 #     80: 1,
 #     830: 2,
@@ -27,6 +26,17 @@ a = 1
 #     200: 25,
 #     2030: 26
 # }
+
+
+
+import json
+courses_json = json.load(open("./json/courses.json","r"))
+rooms = dict()
+def room_creator(courses):
+    for course in courses:
+        print(course["schedules"])
+
+room_creator(courses=courses_json)
 start_sloth = 8
 end_sloth = 10
 start_slotm = 0
