@@ -1,21 +1,6 @@
-// const courses = require("./json/courses.json");
 
-// let sql = false;
-// let csv = false;
-
-// let sqlOutput = "";
-// let csvOutput = "";
-// courses.forEach((course) => {
-//     if (course.schedules !== null) {
-//         let credit = course.credits;
-//         let code = course.eventId;
-//         let name = course.eventName;
-//         let subType = course.eventSubType;
-//     }
-
-//     // console.log(`credit = ${course.credits} code = ${course.eventId} name = ${course.eventName} subjectType = ${course.eventSubType} `);
-// });
 const courses = require('./json/courses_.json');
+const rooms = require('./json/rooms.json');
 const { initializeApp, cert } = require('firebase-admin/app');
 const { getFirestore} = require('firebase-admin/firestore');
 
@@ -27,23 +12,21 @@ initializeApp({
 
 const db = getFirestore();
 
-// let flag = false;
-// courses.forEach(course => { 
-//   course.schedules.forEach(time => {
-//     if (!time.startTime.includes("30")){
-//       if(course.session == '01')
-//         console.log(course);
-//     }
-//   });
-// });
-
 async function upload_courses(){
     courses.forEach(async course => {
-        // let id = course.id;
-        // console.log(course.id.toString());
-        let doc = db.collection('bahaaaaaaaa').doc(course.id.toString());
+        let doc = db.collection('coursesById').doc(course.id.toString());
         await doc.set(course);
       });
     }
-console.log("done");
-upload_courses();
+
+async function upload_rooms(){
+  Object.keys(rooms).forEach(async room => {
+    let doc = db.collection('rooms').doc(room);
+    await doc.set(rooms[room]);
+  });
+}
+
+
+// upload_courses();
+// upload_rooms();
+console.log("done uploading");
