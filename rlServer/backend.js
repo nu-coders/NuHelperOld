@@ -1,3 +1,4 @@
+const e = require('express');
 const { initializeApp, cert } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
 const serviceAccount = require('./key.json');
@@ -63,7 +64,40 @@ async function getRoom(room){
       }
 }
 
-module.exports = {getRoom};
+async function getRooms(room){
+    const roomData = db.collection('rooms').doc(`${room}`);
+    let doc = await roomData.get();
+
+    if (!doc.exists) {
+        return 0;
+      } else {
+        let day = new Date().getDay();
+        let data = doc.data();     
+        return data[day][currentSlot()];
+      }
+}
+
+async function whatsin(room){
+    const roomData = db.collection('rooms').doc(`${room}`);
+    let doc = await roomData.get();
+    if (!doc.exists) {
+        return 0;
+      } else {
+        let day = new Date().getDay();
+        let data = doc.data();     
+        let id = data[day][currentSlot()]['id'];
+        if (id === 0){
+            return "free room";
+        }else{
+            const subjectData = db.collection('coursesById').doc(`${id}`);
+            let doc = await subjectData.get();
+            let data = doc.data();
+            return data;
+        }
+      }
+}
+
+module.exports = {getRoom,whatsin};
 
 console.log(currentSlot());
 
