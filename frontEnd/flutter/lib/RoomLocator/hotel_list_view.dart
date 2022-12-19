@@ -101,13 +101,7 @@ class HotelListView extends StatelessWidget {
                                                 const SizedBox(
                                                   width: 4,
                                                 ),
-                                                Icon(
-                                                  FontAwesomeIcons.locationDot,
-                                                  size: 12,
-                                                  color: HotelAppTheme
-                                                          .buildLightTheme()
-                                                      .primaryColor,
-                                                ),
+
                                                 Expanded(
                                                   child: Text(
                                                     '${hotelData!.dist.toStringAsFixed(1)} km to city',
@@ -126,40 +120,7 @@ class HotelListView extends StatelessWidget {
                                                   const EdgeInsets.only(top: 4),
                                               child: Row(
                                                 children: <Widget>[
-                                                  RatingBar(
-                                                    initialRating:
-                                                        hotelData!.rating,
-                                                    direction: Axis.horizontal,
-                                                    allowHalfRating: true,
-                                                    itemCount: 5,
-                                                    itemSize: 24,
-                                                    ratingWidget: RatingWidget(
-                                                      full: Icon(
-                                                        Icons.star_rate_rounded,
-                                                        color: HotelAppTheme
-                                                                .buildLightTheme()
-                                                            .primaryColor,
-                                                      ),
-                                                      half: Icon(
-                                                        Icons.star_half_rounded,
-                                                        color: HotelAppTheme
-                                                                .buildLightTheme()
-                                                            .primaryColor,
-                                                      ),
-                                                      empty: Icon(
-                                                        Icons
-                                                            .star_border_rounded,
-                                                        color: HotelAppTheme
-                                                                .buildLightTheme()
-                                                            .primaryColor,
-                                                      ),
-                                                    ),
-                                                    itemPadding:
-                                                        EdgeInsets.zero,
-                                                    onRatingUpdate: (rating) {
-                                                      print(rating);
-                                                    },
-                                                  ),
+
                                                   Text(
                                                     ' ${hotelData!.reviews} Reviews',
                                                     style: TextStyle(
@@ -219,11 +180,7 @@ class HotelListView extends StatelessWidget {
                               onTap: () {},
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Icon(
-                                  Icons.favorite_border,
-                                  color: HotelAppTheme.buildLightTheme()
-                                      .primaryColor,
-                                ),
+
                               ),
                             ),
                           ),
