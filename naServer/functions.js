@@ -58,7 +58,7 @@ const upvote = async function(data){
     const doc = await db.collection('nuask').doc(data.roomId).collection('posts').doc(data.postId);
     await doc.update({
         upvotes: FieldValue.increment(1),
-        usersId : FieldValue.arrayUnion(data.userId)
+        upvotedUsersId : FieldValue.arrayUnion(data.userId)
     }).then(() => {
         console.log("Document successfully updated!");
     }).catch((error) => {
@@ -70,7 +70,7 @@ const downvote = async function(data){
     const doc = await db.collection('nuask').doc(data.roomId).collection('posts').doc(data.postId);
     await doc.update({
         downvotes: FieldValue.increment(1),
-        usersId : FieldValue.arrayUnion(data.userId)
+        downVotedUsersId : FieldValue.arrayUnion(data.userId)
     }).then(() => {
         console.log("Document successfully updated!");
     }).catch((error) => {
