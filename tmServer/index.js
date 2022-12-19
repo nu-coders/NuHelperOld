@@ -1,6 +1,18 @@
 const {db} = require('./firebase.js');
+const dayjs = require('dayjs');
+const courses = require('./courses.json');
+const customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat)
+const isBetween = require('dayjs/plugin/isBetween')
+dayjs.extend(isBetween)
 
-
+const deleteDoc = async function(id){
+    db.collection('courses').doc(id).delete().then(() => {
+        console.log('Document successfully deleted!');
+    }).catch((error) => {
+        console.error('Error removing document: ', error);
+    });
+}
 const addDoc  = async function(){
     const docRef = db.collection('courses').doc();
 
@@ -12,7 +24,15 @@ const addDoc  = async function(){
 
 const addDocJson  = async function(course){
     const docRef = db.collection('courses').doc();
+    let sectionLetter = "";
+    let sectionNumber = ""
+    sectionNumber = course.section;
 
+    if(course.eventSubType!="Lecture"&&course.courseType!="Thesis"){
+        console.log(course.eventSubType);
+        sectionLetter = course.section.substring(course.section.length-1,course.section.length);
+        sectionNumber = course.section.substring(0,course.section.length-1);
+    }
     await docRef.set({
         id : docRef.id,
         credits : course.credits,
@@ -25,13 +45,17 @@ const addDocJson  = async function(course){
         seatsLeft: course.seatsLeft,
         section: course.section,
         session: course.session,
-    })  
+        sectionLetter: sectionLetter,
+        sectionNumber: sectionNumber,
+    }).then(()=>{
+        console.log("Uploaded "+ docRef.id);
+    })
 } 
 
 const coursesUploader = async function(){
     courses.map(async(course)=>{
         await addDocJson(course).then(()=>{
-            console.log("done");
+            console.log("Finished Uploading ");
     });
 
     })
@@ -74,22 +98,208 @@ const getCourseByCourseId = async function(courseId){
 }
 
 const getListCoursesByCourseId = async function(coursesId){
+    
+    
     let allCourses = [];
-    coursesId.map(async(courseId) =>{
-        let courseList = []
+    for (const courseId of coursesId){
+        let courses = [];
         const snapshot = await db.collection('courses').where('courseId','==',courseId).get();
-        snapshot.forEach((course) => {
-            courseList.push(course.data());
-            console.log(course.data())
-        });    
-        allCourses.push(await courseList);
-    })
-    return await allCourses;
+        await snapshot.forEach((course) => {
+            courses.push(course.data());
+        }); 
+        allCourses.push(courses);
+    }
+    return allCourses;
 }
-// getCourseById('0171xiS5gMFioa5016wk');
-//getAllCourses();
-// getCourseByName('Music Appreciation');
-// getCourseByCourseId('ARTS105');
-//console.log("hrllo");
 
-module.exports = {getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId};
+
+const getListCoursesByCourseIdSegmented = async function(coursesId){
+    
+    
+    let allCourses = [];
+    for (const courseId of coursesId){
+        let courses = [];
+        const snapshot = await db.collection('courses').where('courseId','==',courseId).get();
+        await snapshot.forEach((course) => {
+            courses.push(course.data());
+        }); 
+        allCourses.push(courses);
+    }
+    return allCourses;
+}
+
+const cartesian =async(a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
+
+
+const createCourseOptionsList = async function(coursesId){
+    let coursesList = await getListCoursesByCourseId(coursesId);
+    finalCoursesOutput=[];
+    //console.log(coursesList);
+    for (const course of coursesList){
+        let singleCourseFinal = [];
+        //Get Number of Sections
+        //Looping on a single CourseID list
+        let sectionNumbers = [];
+        for (const section of course){
+            //console.log(section);
+            sectionNumbers.push(section.sectionNumber);
+        }
+        let uniqueSectionNumbers = [...new Set(sectionNumbers)];
+        //console.log(uniqueSectionNumbers);
+        for (const sectionNumber of uniqueSectionNumbers){
+            let sectionCourses = [];
+            for (const section of course){
+                if(section.sectionNumber==sectionNumber){
+                    sectionCourses.push(section);
+                }
+            }
+            //console.log(sectionCourses);
+            let segmentedCourseByType = [];
+            let courseTypes = [];
+            for (const section of sectionCourses){
+                courseTypes.push(section.courseType);
+            }
+            let uniqueCourseTypes = [...new Set(courseTypes)];
+            //console.log(uniqueCourseTypes);
+            for (const courseType of uniqueCourseTypes){
+                let courseTypeCourses = [];
+                for (const section of sectionCourses){
+                    if(section.courseType==courseType){
+                        courseTypeCourses.push(section);
+                    }
+                }
+                //console.log(courseTypeCourses);
+                segmentedCourseByType.push(courseTypeCourses);
+            }
+            //console.log("//////////////////////////");
+            //console.log(segmentedCourseByType);
+            let courseOption = await cartesian(segmentedCourseByType);
+            singleCourseFinal.push(courseOption);
+        }
+        let singleCourseFinalUnique = [...new Set(singleCourseFinal)];
+        let singleCourseFinalUniqueFlattened = singleCourseFinalUnique.flat();
+        finalCoursesOutput.push(singleCourseFinalUniqueFlattened);
+    }
+
+    return finalCoursesOutput;
+}
+
+const createTablesNoChecks = async function(coursesId){
+    let coursesOptions = await createCourseOptionsList(coursesId);
+    let tablesNoChecks = await cartesian(coursesOptions)
+    // console.log(tablesNoChecks.length);
+    //console.log(dayjs('10:30 AM', 'h:m a').format('h:m'));
+    //console.log()
+    // console.log(dayjs('2019-01-25').format('DD/MM/YYYY'));
+    // console.log(dayjs('10:30 AM', 'h:m a').isBetween(dayjs('10:30 AM', 'h:m a'), dayjs('12:30 AM', 'h:m a'), '[]'));
+
+    const startTime = dayjs('10:29 AM', 'HH:mm').subtract(1, 'minute');
+    const endTime = dayjs('12:30 AM', 'HH:mm').add(1, 'minute');
+
+    const testTime1 = dayjs('10:30 AM', 'HH:mm');
+    // console.log(testTime1.isBetween(startTime, endTime, 'minute', '[]'));  // false
+    
+    // for(const course of coursesOptions){
+    //     console.log(course);
+    // }
+    //console.log("number of tables created "+ tablesNoChecks.length);	
+    return tablesNoChecks;
+}
+
+const removeClashes = async function(coursesId){
+    
+    let tableOptions = await createTablesNoChecks(coursesId);
+    let cleanTableOptions = [];
+    let i=0;
+    for(const table of tableOptions){
+        let clash = false;
+        //console.log("\n\n\ntable number "+i);
+        for(const course of table){
+            let courseStartTime = course.schedule[0].startTime.split(' ')[0];
+            let courseEndTime = course.schedule[0].endTime.split(' ')[0];
+            let courseDay = course.schedule[0].dayDesc;
+            for(const course2 of table){
+                let courseStartTime2 = course2.schedule[0].startTime.split(' ')[0];
+                let courseEndTime2 = course2.schedule[0].endTime.split(' ')[0];
+                let courseDay2 = course2.schedule[0].dayDesc;
+                //console.log(courseDay+" "+courseDay2);
+                if(courseDay==courseDay2&&(course!=course2)){
+                    const startTime = dayjs(courseStartTime, 'HH:mm').add(1, 'minute');
+                    const endTime = dayjs(courseEndTime, 'HH:mm').subtract(1, 'minute');
+                    const startTime2 = dayjs(courseStartTime2, 'HH:mm').add(1, 'minute');
+                    const endTime2 = dayjs(courseEndTime2, 'HH:mm').subtract(1, 'minute');
+                    if(startTime.isBetween(startTime2, endTime2, 'minute', '()') || endTime.isBetween(startTime2, endTime2, 'minute', '[]')){
+                        clash=true;
+                        //console.log("clash found in table "+course.courseName + "  "+course2.courseName+startTime+" "+endTime+" "+startTime2+" "+endTime2);
+                    }
+
+                //    if((courseStartTime <= courseEndTime2)  &&  (courseEndTime >= courseStartTime2)){
+                //         clash=true;
+                //     } 
+                }
+            }
+        }
+        i++;
+        if(!clash){
+            //console.log("valid!!");
+            cleanTableOptions.push(table);
+        }
+    }
+    console.log(cleanTableOptions.length);
+    return cleanTableOptions;
+}
+
+const createTableFiltered = async function(coursesId, filters){
+    let tableOptions = await removeClashes(coursesId);
+    let filteredTableOptions = [];
+    let i=0;
+    for(const table of tableOptions){
+        let isComplying = true;
+        //console.log("\n\n\ntable number "+i);
+        let tableDaysToGo = [];
+        for(const course of table){
+            let courseDay = course.schedule[0].dayDesc;
+            tableDaysToGo.push(courseDay);
+            if(filters.DaysToGo!=null){
+                if(!filters.DaysToGo.includes(courseDay)){
+                //console.log("not valid days to go"+ courseDay);
+                    isComplying=false;
+                } 
+            }
+            
+        }
+        i++;
+        let tableDaysToGoUnique = [...new Set(tableDaysToGo)];
+        //console.log(tableDaysToGoUnique.length)
+        if(filters.noDays!=null){
+            if(tableDaysToGoUnique.length>filters.noDays){
+                //console.log("not valid number of days");
+                isComplying=false;
+            }
+        }
+        if(isComplying){
+            //console.log("valid!!");
+            filteredTableOptions.push(table);
+        }
+    }
+    console.log(filteredTableOptions.length);
+    return filteredTableOptions;
+}
+    
+const saveTable = async function(userId, table){
+    const userRef = await db.collection('users').doc(userId);
+    await userRef.set({
+        hasTable: true,
+        table: table,
+    },{ merge: true }).then(()=>{
+        console.log("Uploaded "+ userRef.id);
+        return userRef.id;
+    })
+}
+
+const getSavedTable = async function(userId){
+    const course = await db.collection('users').doc(userId).get();
+    return course.data().table;
+}
+
+module.exports = {getSavedTable, saveTable, createTableFiltered,removeClashes,createTablesNoChecks, coursesUploader, getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId, createCourseOptionsList};
