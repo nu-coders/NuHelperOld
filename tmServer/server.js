@@ -1,5 +1,5 @@
 const express = require('express');
-const {createTableFiltered,removeClashes,createTablesNoChecks, coursesUploader, getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId, createCourseOptionsList} = require('./index.js');
+const {getSavedTable,saveTable, createTableFiltered,removeClashes,createTablesNoChecks, coursesUploader, getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId, createCourseOptionsList} = require('./index.js');
 
 const PORT = process.env.PORT || 8080;
 
@@ -64,6 +64,25 @@ app.get('/createTableNoClash', async(req, res) => {
     }
 })
 
+app.get('/saveTable', async(req, res) => {
+    console.log("Req body is %j" , req.body);
+    try {
+        res.send(await saveTable(req.body.userId,req.body.table));
+    } catch(e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+})
+
+app.get('/getSavedTable', async(req, res) => {
+    console.log("Req body is %j" , req.body);
+    try {
+        res.send(await getSavedTable(req.body.userId));
+    } catch(e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+})
 
 app.listen(PORT, function () {
     console.log(`Demo project at: ${PORT}!`); 

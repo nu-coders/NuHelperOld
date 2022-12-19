@@ -3,8 +3,16 @@ const dayjs = require('dayjs');
 const courses = require('./courses.json');
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
-var isBetween = require('dayjs/plugin/isBetween')
+const isBetween = require('dayjs/plugin/isBetween')
 dayjs.extend(isBetween)
+
+const deleteDoc = async function(id){
+    db.collection('courses').doc(id).delete().then(() => {
+        console.log('Document successfully deleted!');
+    }).catch((error) => {
+        console.error('Error removing document: ', error);
+    });
+}
 const addDoc  = async function(){
     const docRef = db.collection('courses').doc();
 
@@ -242,42 +250,56 @@ const removeClashes = async function(coursesId){
 }
 
 const createTableFiltered = async function(coursesId, filters){
-        let tableOptions = await removeClashes(coursesId);
-        let filteredTableOptions = [];
-        let i=0;
-        for(const table of tableOptions){
-            let isComplying = true;
-            //console.log("\n\n\ntable number "+i);
-            let tableDaysToGo = [];
-            for(const course of table){
-                let courseDay = course.schedule[0].dayDesc;
-                tableDaysToGo.push(courseDay);
-                if(filters.DaysToGo!=null){
-                   if(!filters.DaysToGo.includes(courseDay)){
-                    console.log("not valid days to go"+ courseDay);
-                        isComplying=false;
-                    } 
-                }
-                
-            }
-            i++;
-            let tableDaysToGoUnique = [...new Set(tableDaysToGo)];
-            console.log(tableDaysToGoUnique.length)
-            if(filters.noDays!=null){
-                if(tableDaysToGoUnique.length>filters.noDays){
-                    console.log("not valid number of days");
+    let tableOptions = await removeClashes(coursesId);
+    let filteredTableOptions = [];
+    let i=0;
+    for(const table of tableOptions){
+        let isComplying = true;
+        //console.log("\n\n\ntable number "+i);
+        let tableDaysToGo = [];
+        for(const course of table){
+            let courseDay = course.schedule[0].dayDesc;
+            tableDaysToGo.push(courseDay);
+            if(filters.DaysToGo!=null){
+                if(!filters.DaysToGo.includes(courseDay)){
+                //console.log("not valid days to go"+ courseDay);
                     isComplying=false;
-                }
+                } 
             }
-            if(isComplying){
-                console.log("valid!!");
-                filteredTableOptions.push(table);
+            
+        }
+        i++;
+        let tableDaysToGoUnique = [...new Set(tableDaysToGo)];
+        //console.log(tableDaysToGoUnique.length)
+        if(filters.noDays!=null){
+            if(tableDaysToGoUnique.length>filters.noDays){
+                //console.log("not valid number of days");
+                isComplying=false;
             }
         }
-        console.log(filteredTableOptions.length);
-        return filteredTableOptions;
+        if(isComplying){
+            //console.log("valid!!");
+            filteredTableOptions.push(table);
+        }
     }
+    console.log(filteredTableOptions.length);
+    return filteredTableOptions;
+}
     
+const saveTable = async function(userId, table){
+    const userRef = await db.collection('users').doc(userId);
+    await userRef.set({
+        hasTable: true,
+        table: table,
+    },{ merge: true }).then(()=>{
+        console.log("Uploaded "+ userRef.id);
+        return userRef.id;
+    })
+}
 
+const getSavedTable = async function(userId){
+    const course = await db.collection('users').doc(userId).get();
+    return course.data().table;
+}
 
-module.exports = {createTableFiltered,removeClashes,createTablesNoChecks, coursesUploader, getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId, createCourseOptionsList};
+module.exports = {getSavedTable, saveTable, createTableFiltered,removeClashes,createTablesNoChecks, coursesUploader, getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId, createCourseOptionsList};
