@@ -106,6 +106,47 @@ async function roomTable(room) {
     return data[day];
   }
 }
-module.exports = { getRoom, whatsin, roomTable };
+
+async function getRooms(building) {
+  const roomData = db.collection("rooms");
+  let slot = currentSlot();
+  let day = new Date().getDay().toString();
+  let result = [];
+  if (building === 3) {
+    let data = await roomData.get();
+    data.forEach((room) => {
+      id = room.id;
+      room = room.data();
+      if (room[day][slot]["status"] === true) {
+        result.push(id);
+      }
+    });
+    return result;
+  } else if (building === 1) {
+    let data = await roomData.where("building", "==", "1").get();
+    data.forEach((room) => {
+      id = room.id;
+      room = room.data();
+      if (room[day][slot]["status"] === true) {
+        result.push(id);
+      }
+    });
+    return result;
+  } else if (building === 2) {
+    let data = await roomData.where("building", "==", "2").get();
+    data.forEach((room) => {
+      id = room.id;
+      room = room.data();
+      if (room[day][slot]["status"] === true) {
+        result.push(id);
+      }
+    });
+    return result;
+  } else {
+    return "Not a builing";
+  }
+  let doc = await roomData.get();
+}
+module.exports = { getRoom, whatsin, roomTable, getRooms };
 
 console.log(currentSlot());

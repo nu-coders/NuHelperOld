@@ -30,13 +30,20 @@ router.get("/api/getroom/", async (req, res) => {
   }
 });
 
-router.get("/api/getrooms/", (req, res) => {
+//ok
+router.get("/api/getrooms/", async (req, res) => {
   // http://127.0.0.1:8080/api/getrooms/
   let building = req.body["building"];
   if (building == null || building == "") {
+    building = 3;
     res.status(404).json({ error: "Not a builing" });
   } else {
-    res.send({ getrooms: building });
+    let to_return = await backend.getRooms(building);
+    if (to_return === 0) {
+      res.status(404).json({ error: "Not a room" });
+    } else {
+      res.send({ "getrooms": to_return });
+    }
   }
 });
 
