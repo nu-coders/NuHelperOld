@@ -144,7 +144,7 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
     var navigateTo ;
     if (CategoryType.ui == categoryTypeData) {
       txt = 'Table Maker';
-      navigateTo = IntroductionAnimationScreen();
+      navigateTo = HotelHomeScreen();
     } else if (CategoryType.coding == categoryTypeData) {
       txt = 'Room Locator';
       navigateTo = HotelHomeScreen();

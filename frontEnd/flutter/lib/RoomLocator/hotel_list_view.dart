@@ -104,7 +104,7 @@ class HotelListView extends StatelessWidget {
 
                                                 Expanded(
                                                   child: Text(
-                                                    '${hotelData!.dist.toStringAsFixed(1)} km to city',
+                                                    ' Until  ${hotelData!.dist} ',
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     style: TextStyle(
@@ -122,7 +122,7 @@ class HotelListView extends StatelessWidget {
                                                 children: <Widget>[
 
                                                   Text(
-                                                    ' ${hotelData!.reviews} Reviews',
+                                                    ' ',
                                                     style: TextStyle(
                                                         fontSize: 14,
                                                         color: Colors.grey
@@ -146,19 +146,12 @@ class HotelListView extends StatelessWidget {
                                           CrossAxisAlignment.end,
                                       children: <Widget>[
                                         Text(
-                                          '\$${hotelData!.perNight}',
+                                          '${hotelData!.perNight}',
                                           textAlign: TextAlign.left,
                                           style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 22,
                                           ),
-                                        ),
-                                        Text(
-                                          '/per night',
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color:
-                                                  Colors.grey.withOpacity(0.8)),
                                         ),
                                       ],
                                     ),

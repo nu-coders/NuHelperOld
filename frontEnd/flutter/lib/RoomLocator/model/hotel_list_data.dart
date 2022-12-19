@@ -3,65 +3,65 @@ class HotelListData {
     this.imagePath = '',
     this.titleTxt = '',
     this.subTxt = "",
-    this.dist = 1.8,
+    this.dist = "10:30",
     this.reviews = 80,
     this.rating = 4.5,
-    this.perNight = 180,
+    this.perNight = "Vacant",
   });
 
   String imagePath;
   String titleTxt;
   String subTxt;
-  double dist;
+  String dist;
   double rating;
   int reviews;
-  int perNight;
+  String perNight;
 
   static List<HotelListData> hotelList = <HotelListData>[
     HotelListData(
       imagePath: 'assets/hotel/hotel_1.png',
-      titleTxt: 'Grand Royal Hotel',
-      subTxt: 'Wembley, London',
-      dist: 2.0,
+      titleTxt: 'F43',
+      subTxt: 'Free',
+      dist: "10:30",
       reviews: 80,
       rating: 4.4,
-      perNight: 180,
+      perNight: "Vacant",
     ),
     HotelListData(
-      imagePath: 'assets/hotel/hotel_2.png',
-      titleTxt: 'Queen Hotel',
-      subTxt: 'Wembley, London',
-      dist: 4.0,
-      reviews: 74,
-      rating: 4.5,
-      perNight: 200,
-    ),
-    HotelListData(
-      imagePath: 'assets/hotel/hotel_3.png',
-      titleTxt: 'Grand Royal Hotel',
-      subTxt: 'Wembley, London',
-      dist: 3.0,
-      reviews: 62,
-      rating: 4.0,
-      perNight: 60,
-    ),
-    HotelListData(
-      imagePath: 'assets/hotel/hotel_4.png',
-      titleTxt: 'Queen Hotel',
-      subTxt: 'Wembley, London',
-      dist: 7.0,
-      reviews: 90,
+      imagePath: 'assets/hotel/hotel_1.png',
+      titleTxt: 'F44',
+      subTxt: 'CSCI311',
+      dist: "10:30",
+      reviews: 80,
       rating: 4.4,
-      perNight: 170,
+      perNight: "Occupied",
     ),
     HotelListData(
-      imagePath: 'assets/hotel/hotel_5.png',
-      titleTxt: 'Grand Royal Hotel',
-      subTxt: 'Wembley, London',
-      dist: 2.0,
-      reviews: 240,
-      rating: 4.5,
-      perNight: 200,
+      imagePath: 'assets/hotel/hotel_1.png',
+      titleTxt: 'F46',
+      subTxt: 'Free',
+      dist: "10:30",
+      reviews: 80,
+      rating: 4.4,
+      perNight: "Vacant",
+    ),
+    HotelListData(
+      imagePath: 'assets/hotel/hotel_1.png',
+      titleTxt: 'F51',
+      subTxt: 'CSCI301',
+      dist: "10:30",
+      reviews: 80,
+      rating: 4.4,
+      perNight: "Occupied",
+    ),
+    HotelListData(
+      imagePath: 'assets/hotel/hotel_1.png',
+      titleTxt: 'F52',
+      subTxt: 'CSCI313',
+      dist: "10:30",
+      reviews: 80,
+      rating: 4.4,
+      perNight: "Occupied",
     ),
   ];
 }
