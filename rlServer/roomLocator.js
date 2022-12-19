@@ -1,39 +1,81 @@
 const express = require("express");
+const { database } = require("firebase-admin");
+
+const backend = require("./backend.js");
+
 const app = express();
 app.use(express.json());
+
 const router = express.Router();
 const port = 8080;
 
 router.get("/api", (req, res) => {
   res.send({ NuCoders: "Hello World" });
 });
-router.get("/api/getroom/", (req, res) => {
+
+// ok
+router.get("/api/getroom/", async (req, res) => {
   // 127.0.0.1:8080/api/getroom/
-  if (req.query.id == null || req.query.id == "") {
+  let id = req.body["id"];
+  if (id == null || id == "") {
     res.status(404).json({ error: "Not a room" });
   } else {
-    res.send({ getroom: req.query.id });
+    let to_return = await backend.getRoom(id);
+    if (to_return === 0) {
+      res.status(404).json({ error: "Not a room" });
+    } else {
+      console.log(to_return);
+      res.send({ getroom: to_return });
+    }
   }
 });
-router.get("/api/getrooms/", (req, res) => {
+
+//ok
+router.get("/api/getrooms/", async (req, res) => {
   // http://127.0.0.1:8080/api/getrooms/
-  if (req.query.bu == null || req.query.bu == "") {
-    res.status(404).json({ error: "Not a builing" });
+  let building = req.body["building"];
+  if (building == null || building == "") {
+    res.status(404).json({ error: "Not a building" });
   } else {
-    res.send({ getroom: req.query.bu });
+    let to_return = await backend.getRooms(building);
+    if (to_return === 0) {
+      res.status(404).json({ error: "Not a building" });
+    } else {
+      res.send({ "getrooms": to_return });
+    }
   }
 });
-router.get("/api/roomtable", (req, res) => {
-  if (req.query.id == null || req.query.id == "") {
+
+// ok
+router.get("/api/roomtable", async (req, res) => {
+  // http://127.0.0.1:8080/api/roomtable/
+  let id = req.body["id"];
+  if (id == null || id == "") {
     res.status(404).json({ error: "Not a room" });
   } else {
-    res.send({ getroom: req.query.id });
+    let to_return = await backend.roomTable(id);
+    if (to_return === 0) {
+      res.status(404).json({ error: "Not a room" });
+    } else {
+      res.send({ "roomtable": to_return });
+    }
   }
 });
-router.get("/api/whatsin", (req, res) => {
-  console.log(req.body["test"]);
-  res.send("done");
-  // res.send("whatsin");
+
+// ok
+router.get("/api/whatsin", async (req, res) => {
+  // http://127.0.0.1:8080/api/whatsin/
+  let id = req.body["id"];
+  if (id == null || id == "") {
+    res.status(404).json({ error: "Not a room" });
+  } else {
+    let to_return = await backend.whatsin(id);
+    if (to_return === 0) {
+      res.status(404).json({ error: "Not a room" });
+    } else {
+      res.send({ whatsin: to_return });
+    }
+  }
 });
 
 app.use("/", router);
@@ -43,5 +85,5 @@ app.use((req, res) => {
 });
 
 app.listen(port, () => {
-  console.log("runing");
+  console.log("runing server");
 });
