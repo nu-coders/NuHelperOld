@@ -40,13 +40,19 @@ router.get("/api/getrooms/", (req, res) => {
   }
 });
 
-router.get("/api/roomtable", (req, res) => {
+// ok
+router.get("/api/roomtable", async (req, res) => {
   // http://127.0.0.1:8080/api/roomtable/
   let id = req.body["id"];
   if (id == null || id == "") {
     res.status(404).json({ error: "Not a room" });
   } else {
-    res.send({ roomtable: id });
+    let to_return = await backend.roomTable(id);
+    if (to_return === 0) {
+      res.status(404).json({ error: "Not a room" });
+    } else {
+      res.send({ "roomtable": to_return });
+    }
   }
 });
 
@@ -61,7 +67,7 @@ router.get("/api/whatsin", async (req, res) => {
     if (to_return === 0) {
       res.status(404).json({ error: "Not a room" });
     } else {
-      res.send({ "whatsin": to_return });
+      res.send({ whatsin: to_return });
     }
   }
 });
