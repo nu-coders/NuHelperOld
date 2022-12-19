@@ -13812,8 +13812,8 @@
         "roomId": "154",
         "scheduledDays": [1],
         "scheduledEndTime": [14, 20, 0],
-        "scheduledStartTime": [3, 0, 0],
-        "startTime": "3:00 AM"
+        "scheduledStartTime": [15, 0, 0],
+        "startTime": "3:00 PM"
       }
     ],
     "seatsLeft": 3,
