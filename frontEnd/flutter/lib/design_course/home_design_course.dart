@@ -1,10 +1,13 @@
-import 'package:best_flutter_ui_templates/design_course/category_list_view.dart';
-import 'package:best_flutter_ui_templates/design_course/course_info_screen.dart';
-import 'package:best_flutter_ui_templates/design_course/popular_course_list_view.dart';
-import 'package:best_flutter_ui_templates/main.dart';
+import 'package:nuHelper/design_course/category_list_view.dart';
+import 'package:nuHelper/design_course/course_info_screen.dart';
+import 'package:nuHelper/design_course/popular_course_list_view.dart';
+import 'package:nuHelper/main.dart';
 import 'package:flutter/material.dart';
 import 'design_course_app_theme.dart';
-
+import 'package:nuHelper/design_course/home_design_course.dart';
+import 'package:nuHelper/fitness_app/fitness_app_home_screen.dart';
+import 'package:nuHelper/hotel_booking/hotel_home_screen.dart';
+import 'package:nuHelper/introduction_animation/introduction_animation_screen.dart';
 class DesignCourseHomeScreen extends StatefulWidget {
   @override
   _DesignCourseHomeScreenState createState() => _DesignCourseHomeScreenState();
@@ -31,11 +34,11 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
                   height: MediaQuery.of(context).size.height,
                   child: Column(
                     children: <Widget>[
-                      getSearchBarUI(),
-                      getCategoryUI(),
-                      Flexible(
-                        child: getPopularCourseUI(),
-                      ),
+                      //getSearchBarUI(),
+                       getCategoryUI(),
+                      // Flexible(
+                      //   child: getPopularCourseUI(),
+                      // ),
                     ],
                   ),
                 ),
@@ -55,7 +58,7 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
         Padding(
           padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
           child: Text(
-            'Category',
+            'Choose Service',
             textAlign: TextAlign.left,
             style: TextStyle(
               fontWeight: FontWeight.w600,
@@ -89,11 +92,11 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
         const SizedBox(
           height: 16,
         ),
-        CategoryListView(
-          callBack: () {
-            moveTo();
-          },
-        ),
+        // CategoryListView(
+        //   callBack: () {
+        //     moveTo();
+        //   },
+        // ),
       ],
     );
   }
@@ -138,12 +141,17 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
 
   Widget getButtonUI(CategoryType categoryTypeData, bool isSelected) {
     String txt = '';
+    var navigateTo ;
     if (CategoryType.ui == categoryTypeData) {
-      txt = 'Ui/Ux';
+      txt = 'Table Maker';
+      navigateTo = IntroductionAnimationScreen();
     } else if (CategoryType.coding == categoryTypeData) {
-      txt = 'Coding';
+      txt = 'Room Locator';
+      navigateTo = HotelHomeScreen();
     } else if (CategoryType.basic == categoryTypeData) {
-      txt = 'Basic UI';
+      txt = 'NU ASK';
+      navigateTo = HotelHomeScreen();
+
     }
     return Expanded(
       child: Container(
@@ -162,6 +170,15 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
               setState(() {
                 categoryType = categoryTypeData;
               });
+
+                Navigator.push<dynamic>(
+                  context,
+                  MaterialPageRoute<dynamic>(
+                    builder: (BuildContext context) =>
+                    navigateTo,
+                  ),
+                );
+
             },
             child: Padding(
               padding: const EdgeInsets.only(
@@ -172,7 +189,7 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: 12,
+                    fontSize: 13,
                     letterSpacing: 0.27,
                     color: isSelected
                         ? DesignCourseAppTheme.nearlyWhite
@@ -270,7 +287,7 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'Choose your',
+                  'NuCoders',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
@@ -280,7 +297,7 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
                   ),
                 ),
                 Text(
-                  'Design Course',
+                  'Nu Helper',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
