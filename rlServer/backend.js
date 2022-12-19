@@ -57,7 +57,17 @@ async function getRoom(room) {
   } else {
     let day = new Date().getDay();
     let data = doc.data();
-    return data[day][currentSlot()];
+    let result = data[day][currentSlot()];
+    let when;
+    for(let slot in Object.keys(data[day])){
+        if (slot > currentSlot(data[day])){
+            if (data[day][slot].status != result.status){
+                when = slot;
+                break;
+            }
+        }
+    }
+    return result;
   }
 }
 
