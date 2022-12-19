@@ -1,4 +1,4 @@
-import 'package:nuHelper/hotel_booking/hotel_app_theme.dart';
+import 'package:nuHelper/RoomLocator/hotel_app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -52,13 +52,13 @@ class HotelListView extends StatelessWidget {
                       children: <Widget>[
                         Column(
                           children: <Widget>[
-                            AspectRatio(
-                              aspectRatio: 2,
-                              child: Image.asset(
-                                hotelData!.imagePath,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                            // AspectRatio(
+                            //   aspectRatio: 2,
+                            //   child: Image.asset(
+                            //     hotelData!.imagePath,
+                            //     fit: BoxFit.cover,
+                            //   ),
+                            // ),
                             Container(
                               color: HotelAppTheme.buildLightTheme()
                                   .backgroundColor,

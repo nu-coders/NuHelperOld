@@ -1,4 +1,4 @@
-import 'package:nuHelper/hotel_booking/hotel_app_theme.dart';
+import 'package:nuHelper/RoomLocator/hotel_app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

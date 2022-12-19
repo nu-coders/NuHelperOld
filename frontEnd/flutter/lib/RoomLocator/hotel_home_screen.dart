@@ -1,6 +1,6 @@
-import 'package:nuHelper/hotel_booking/calendar_popup_view.dart';
-import 'package:nuHelper/hotel_booking/hotel_list_view.dart';
-import 'package:nuHelper/hotel_booking/model/hotel_list_data.dart';
+import 'package:nuHelper/RoomLocator/calendar_popup_view.dart';
+import 'package:nuHelper/RoomLocator/hotel_list_view.dart';
+import 'package:nuHelper/RoomLocator/model/hotel_list_data.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -549,7 +549,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
             Expanded(
               child: Center(
                 child: Text(
-                  'Explore',
+                  'Room Locator',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 22,
@@ -564,32 +564,32 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(32.0),
-                      ),
-                      onTap: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.favorite_border),
-                      ),
-                    ),
-                  ),
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(32.0),
-                      ),
-                      onTap: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(FontAwesomeIcons.locationDot),
-                      ),
-                    ),
-                  ),
+                  // Material(
+                  //   color: Colors.transparent,
+                  //   child: InkWell(
+                  //     borderRadius: const BorderRadius.all(
+                  //       Radius.circular(32.0),
+                  //     ),
+                  //     onTap: () {},
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: Icon(Icons.favorite_border),
+                  //     ),
+                  //   ),
+                  // ),
+                  // Material(
+                  //   color: Colors.transparent,
+                  //   child: InkWell(
+                  //     borderRadius: const BorderRadius.all(
+                  //       Radius.circular(32.0),
+                  //     ),
+                  //     onTap: () {},
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: Icon(FontAwesomeIcons.locationDot),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             )
