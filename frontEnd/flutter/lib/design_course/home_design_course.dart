@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'design_course_app_theme.dart';
 import 'package:nuHelper/design_course/home_design_course.dart';
 import 'package:nuHelper/fitness_app/fitness_app_home_screen.dart';
-import 'package:nuHelper/hotel_booking/hotel_home_screen.dart';
+import 'package:nuHelper/RoomLocator/hotel_home_screen.dart';
 import 'package:nuHelper/introduction_animation/introduction_animation_screen.dart';
 class DesignCourseHomeScreen extends StatefulWidget {
   @override
@@ -144,7 +144,7 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
     var navigateTo ;
     if (CategoryType.ui == categoryTypeData) {
       txt = 'Table Maker';
-      navigateTo = IntroductionAnimationScreen();
+      navigateTo = HotelHomeScreen();
     } else if (CategoryType.coding == categoryTypeData) {
       txt = 'Room Locator';
       navigateTo = HotelHomeScreen();

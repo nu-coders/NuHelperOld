@@ -6,6 +6,7 @@ import 'navigation_home_screen.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:nuHelper/fitness_app/fitness_app_home_screen.dart';
 import 'package:nuHelper/design_course/home_design_course.dart';
+import 'package:nuHelper/introduction_animation/introduction_animation_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
@@ -34,8 +35,8 @@ class MyApp extends StatelessWidget {
         textTheme: AppTheme.textTheme,
         platform: TargetPlatform.iOS,
       ),
-      // home: NavigationHomeScreen(),
-      home: DesignCourseHomeScreen(),
+       home: IntroductionAnimationScreen(),
+      //home: DesignCourseHomeScreen(),
     );
   }
 }

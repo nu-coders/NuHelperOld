@@ -76,7 +76,7 @@ class RelaxView extends StatelessWidget {
               SlideTransition(
                 position: _relaxAnimation,
                 child: Text(
-                  "Relax",
+                  "NU Table Maker",
                   style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -86,7 +86,7 @@ class RelaxView extends StatelessWidget {
                   padding:
                       EdgeInsets.only(left: 64, right: 64, top: 16, bottom: 16),
                   child: Text(
-                    "Lorem ipsum dolor sit amet,consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore",
+                    "Create your table in no time and by your own rules!. Start making your own decisions about when to go to Uni and when to stay home.",
                     textAlign: TextAlign.center,
                   ),
                 ),

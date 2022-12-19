@@ -97,7 +97,7 @@ class CareView extends StatelessWidget {
                 child: SlideTransition(
                   position: _relaxSecondHalfAnimation,
                   child: Text(
-                    "Care",
+                    "NU Room Locator",
                     style:
                         TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
                   ),
@@ -107,7 +107,7 @@ class CareView extends StatelessWidget {
                 padding:
                     EdgeInsets.only(left: 64, right: 64, bottom: 16, top: 16),
                 child: Text(
-                  "Lorem ipsum dolor sit amet,consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore",
+                  "Lost!! never again with Room Locator you will be able to know where every lecture is and where are all the free rooms to stay at.",
                   textAlign: TextAlign.center,
                 ),
               ),

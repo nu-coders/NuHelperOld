@@ -6,6 +6,7 @@ import 'package:nuHelper/introduction_animation/components/splash_view.dart';
 import 'package:nuHelper/introduction_animation/components/top_back_skip_view.dart';
 import 'package:nuHelper/introduction_animation/components/welcome_view.dart';
 import 'package:flutter/material.dart';
+import 'package:nuHelper/design_course/home_design_course.dart';
 
 class IntroductionAnimationScreen extends StatefulWidget {
   const IntroductionAnimationScreen({Key? key}) : super(key: key);
@@ -112,6 +113,12 @@ class _IntroductionAnimationScreenState
   }
 
   void _signUpClick() {
-    Navigator.pop(context);
+    Navigator.push<dynamic>(
+      context,
+      MaterialPageRoute<dynamic>(
+        builder: (BuildContext context) =>
+        DesignCourseHomeScreen(),
+      ),
+    );
   }
 }

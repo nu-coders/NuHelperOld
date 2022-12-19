@@ -38,14 +38,14 @@ class _SplashViewState extends State<SplashView> {
             Padding(
               padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
               child: Text(
-                "Clearhead",
+                "NuHelper Platform",
                 style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
               ),
             ),
             Padding(
               padding: EdgeInsets.only(left: 64, right: 64),
               child: Text(
-                "Lorem ipsum dolor sit amet,consectetur adipiscing elit,sed do eiusmod tempor incididunt ut labore",
+                "Organize your day with our 3 top tier services to help you through your college years",
                 textAlign: TextAlign.center,
               ),
             ),
