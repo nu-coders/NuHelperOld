@@ -143,10 +143,10 @@ async function getRooms(building) {
     });
     return result;
   } else {
-    return "Not a builing";
+    return 0;
   }
-  let doc = await roomData.get();
 }
+
 module.exports = { getRoom, whatsin, roomTable, getRooms };
 
 console.log(currentSlot());

@@ -35,12 +35,11 @@ router.get("/api/getrooms/", async (req, res) => {
   // http://127.0.0.1:8080/api/getrooms/
   let building = req.body["building"];
   if (building == null || building == "") {
-    building = 3;
-    res.status(404).json({ error: "Not a builing" });
+    res.status(404).json({ error: "Not a building" });
   } else {
     let to_return = await backend.getRooms(building);
     if (to_return === 0) {
-      res.status(404).json({ error: "Not a room" });
+      res.status(404).json({ error: "Not a building" });
     } else {
       res.send({ "getrooms": to_return });
     }
