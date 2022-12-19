@@ -70,18 +70,18 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
                                 return Column(
                                   children: <Widget>[
                                     getSearchBarUI(),
-                                    getTimeDateUI(),
+                                    //getTimeDateUI(),
                                   ],
                                 );
                               }, childCount: 1),
                             ),
-                            SliverPersistentHeader(
-                              pinned: true,
-                              floating: true,
-                              delegate: ContestTabHeader(
-                                getFilterBarUI(),
-                              ),
-                            ),
+                            // SliverPersistentHeader(
+                            //   pinned: true,
+                            //   floating: true,
+                            //   delegate: ContestTabHeader(
+                            //     getFilterBarUI(),
+                            //   ),
+                            // ),
                           ];
                         },
                         body: Container(
@@ -351,7 +351,7 @@ class _HotelHomeScreenState extends State<HotelHomeScreen>
                     cursorColor: HotelAppTheme.buildLightTheme().primaryColor,
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintText: 'London...',
+                      hintText: 'Search Room...',
                     ),
                   ),
                 ),
