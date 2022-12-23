@@ -78,39 +78,46 @@ def slots_filler(input_json):
         for schedule in course["schedules"]:
             room = schedule["roomId"]
             if room not in ["Online", ""]:
-                room_id = schedule['roomId']
                 day = schedule['scheduledDays'][0]
                 start_slot = calculate_slots(schedule['scheduledStartTime'])
                 end_slot = calculate_slots(schedule['scheduledEndTime'])
                 for slot in range(start_slot, end_slot):
-                    input_json[room_id][f"{day}"][f"{slot}"]['status'] = False
-                    # input_json[room_id][f"{day}"][f"{slot}"]['course'] =  course["eventId"]
-                    # input_json[room_id][f"{day}"][f"{slot}"]['type'] = course["eventSubType"]
-                    # input_json[room_id][f"{day}"][f"{slot}"]['section'] = course["section"]
+                    input_json[room][f"{day}"][f"{slot}"]['status'] = False
+                    input_json[room][f"{day}"][f"{slot}"]['course'] = course["eventId"]
+                    input_json[room][f"{day}"][f"{slot}"]['type'] = course["eventSubType"]
+                    input_json[room][f"{day}"][f"{slot}"]['section'] = course["section"]
+
     return input_json
 
 
 def empty_vacant(input_json):
     days = ["0", "1", "2", "3", "4", "6"]
-    slots = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24"]
+    slots = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+             "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24"]
     slots_len = len(slots)
     for room in input_json:
         for day in days:
             for slot in range(slots_len):
                 status = input_json[room][day][slots[slot]]["status"]
                 temp_status = status
-                for i in range(slot,slots_len):
+                for i in range(slot, slots_len):
                     if status != temp_status:
                         input_json[room][day][slots[slot]]["E/V"] = i
                         break
                     temp_status = input_json[room][day][slots[i]]["status"]
     return input_json
 
+rooms_json.write(json.dumps(room_creator(courses_json)))
+rooms_json.close()
 
-rooms = room_creator(courses_json)
-filled = slots_filler(rooms)
+rooms_json = open(r"./json/rooms.json", "r+")
+rooms = json.load(rooms_json)
 
-# inp = open("./json/rooms.json", "r")
-# inpo = open("./json/rooms2.json", "w")
-# rooms_json.write(json.dumps(empty_vacant(filled)))
-rooms_json.write(json.dumps(filled))
+rooms_json = open(r"./json/rooms.json", "w")
+sf = slots_filler(rooms)
+rooms_json.write(json.dumps(empty_vacant(sf)))
+
+
+
+print("done")
+
