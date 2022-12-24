@@ -44,6 +44,33 @@ floors = {
     "": "N/A"
 }
 
+e_v = {
+    1: '8:30 AM',
+    2: '9:00 AM',
+    3: '9:30 AM',
+    4: '10:00 AM',
+    5: '10:30 AM',
+    6: '11:00 AM',
+    7: '11:30 AM',
+    8: '12:00 PM',
+    9: '12:30 PM',
+    10: '13:00 PM',
+    11: '13:30 PM',
+    12: '14:00 PM',
+    13: '14:30 PM',
+    14: '15:00 PM',
+    15: '15:30 PM',
+    16: '16:00 PM',
+    17: '16:30 PM',
+    18: '17:00 PM',
+    19: '17:30 PM',
+    20: '18:00 PM',
+    21: '18:30 PM',
+    22: '19:00 PM',
+    23: '19:30 PM',
+    24: '20:00 PM',
+    0: '20:30 PM'
+}
 
 def room_creator(courses):
     template_json = json.load(open(r"./template.json", "r"))
@@ -102,8 +129,16 @@ def empty_vacant(input_json):
                 temp_status = status
                 for i in range(slot, slots_len):
                     if status != temp_status:
-                        input_json[room][day][slots[slot]]["E/V"] = i
+                        state = "occupied"
+                        if status == True:
+                            state = "vacant"
+                        input_json[room][day][slots[slot]]["E/V"] = f"The room is {state} until "+ e_v[i]
                         break
+                    elif status == False:
+                        input_json[room][day][slots[slot]]["E/V"] = "The room is occupied until the of today :("
+                    elif status == True:
+                        input_json[room][day][slots[slot]]["E/V"] = "The room is vacant until the of today :)"
+
                     temp_status = input_json[room][day][slots[i]]["status"]
     return input_json
 
@@ -117,7 +152,4 @@ rooms_json = open(r"./json/rooms.json", "w")
 sf = slots_filler(rooms)
 rooms_json.write(json.dumps(empty_vacant(sf)))
 
-
-
 print("done")
-
