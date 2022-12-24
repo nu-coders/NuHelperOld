@@ -56,7 +56,7 @@ async function getRoom(room) {
 
   if (!doc.exists) {
     return 0;
-  } else if(slot === 0){
+  } else if(slot == 0){
     return {course: 0,status: true,type: 0,'E/V': 'The room is vacant until the end of today :)',section: 0};
   } else {
     let day = new Date().getDay();
@@ -83,7 +83,6 @@ async function whatsin(room) {
     } 
     delete data.status;
     return data;
-
   }
 }
 
@@ -95,8 +94,8 @@ async function roomTable(room) {
     return 0;
   } else {
     let day = new Date().getDay();
-    let data = doc.data();
-    return data[day];
+    let data = doc.data()[day];
+    return data;
   }
 }
 
