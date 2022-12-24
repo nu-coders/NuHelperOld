@@ -101,44 +101,24 @@ async function roomTable(room) {
 
 async function getRooms(building) {
   const roomData = db.collection("rooms");
-  let slot = currentSlot();
-  let day = new Date().getDay().toString();
+  // let slot = currentSlot();
+  let slot = "18";
+  let day = new Date().getDay();
   let result = [];
   if (building === 3) {
-    let data = await roomData.get();
+    let data = await roomData.where(`${day}.${slot}.status`, "==", true).get();
     data.forEach((room) => {
-      id = room.id;
-      room = room.data();
-      if (room[day][slot]["status"] === true) {
-        result.push(id);
-      }
+      result.push(room.id)
     });
-    return result;
-  } else if (building === 1) {
-    let data = await roomData.where("building", "==", "1").get();
+  } else if (building === 1 || building === 2) {
+    let data = await roomData.where("building", "==", `${building}`).where(`${day}.${slot}.status`, "==", true).get();
     data.forEach((room) => {
-      id = room.id;
-      room = room.data();
-      if (room[day][slot]["status"] === true) {
-        result.push(id);
-      }
+      result.push(room.id);
     });
-    return result;
-  } else if (building === 2) {
-    let data = await roomData.where("building", "==", "2").get();
-    data.forEach((room) => {
-      id = room.id;
-      room = room.data();
-      if (room[day][slot]["status"] === true) {
-        result.push(id);
-      }
-    });
-    return result;
   } else {
     return 0;
   }
+  return result;
 }
 
 module.exports = { getRoom, whatsin, roomTable, getRooms };
-
-console.log(currentSlot());
