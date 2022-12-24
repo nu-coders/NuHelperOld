@@ -104,8 +104,19 @@ async function getRooms(building) {
   let day = new Date().getDay();
   let slot = currentSlot();
   let result = [];
-
-  if (building === 3) {
+  if (slot == 0){
+    if (building == 3){
+      let data = await roomData.get();
+      data.forEach((room) => {
+        result.push(room.id)
+      });
+    }else if (building === 1 || building === 2) {
+      let data = await roomData.where("building", "==", `${building}`).get();
+      data.forEach((room) => {
+        result.push(room.id);
+      });
+    }
+  }else if (building === 3) {
     let data = await roomData.where(`${day}.${slot}.status`, "==", true).get();
     data.forEach((room) => {
       result.push(room.id)
