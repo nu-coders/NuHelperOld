@@ -51,22 +51,15 @@ function currentSlot() {
 async function getRoom(room) {
   const roomData = db.collection("rooms").doc(`${room}`);
   let doc = await roomData.get();
-
+  let slot = currentSlot();
   if (!doc.exists) {
     return 0;
+  } else if(slot == 0){
+    return {course: 0,status: true,type: 0,'E/V': 'The room is vacant until the end of today :)',section: 0};
   } else {
     let day = new Date().getDay();
     let data = doc.data();
-    let result = data[day][currentSlot()];
-    let when;
-    for(let slot in Object.keys(data[day])){
-        if (slot > currentSlot(data[day])){
-            if (data[day][slot].status != result.status){
-                when = slot;
-                break;
-            }
-        }
-    }
+    let result = data[day][slot];
     return result;
   }
 }
