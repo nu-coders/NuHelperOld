@@ -40,6 +40,7 @@ function currentSlot() {
   let currentTime = new Date();
   let hour = currentTime.getHours();
   let minute = currentTime.getMinutes();
+
   if (!(hour in slots)) {
     return 0;
   } else if (minute >= 30) {
@@ -52,48 +53,37 @@ async function getRoom(room) {
   const roomData = db.collection("rooms").doc(`${room}`);
   let doc = await roomData.get();
   let slot = currentSlot();
+
   if (!doc.exists) {
     return 0;
-  } else if(slot == 0){
+  } else if(slot === 0){
     return {course: 0,status: true,type: 0,'E/V': 'The room is vacant until the end of today :)',section: 0};
   } else {
     let day = new Date().getDay();
-    let data = doc.data();
-    let result = data[day][slot];
-    return result;
-  }
-}
-
-async function getRooms(room) {
-  const roomData = db.collection("rooms").doc(`${room}`);
-  let doc = await roomData.get();
-
-  if (!doc.exists) {
-    return 0;
-  } else {
-    let day = new Date().getDay();
-    let data = doc.data();
-    return data[day][currentSlot()];
+    let data = doc.data()[day][slot];
+    return data;
   }
 }
 
 async function whatsin(room) {
   const roomData = db.collection("rooms").doc(`${room}`);
   let doc = await roomData.get();
+  let slot = currentSlot();
+
   if (!doc.exists) {
     return 0;
+  } else if(slot == 0){
+    return "Free Room";
   } else {
     let day = new Date().getDay();
-    let data = doc.data();
-    let id = data[day][currentSlot()]["id"];
-    if (id === 0) {
-      return "free room";
-    } else {
-      const subjectData = db.collection("coursesById").doc(`${id}`);
-      let doc = await subjectData.get();
-      let data = doc.data();
-      return data;
-    }
+    let data = doc.data()[day][slot];
+    let status = data["status"];
+    if (status === true) {
+      return "Free Room";
+    } 
+    delete data.status;
+    return data;
+
   }
 }
 
