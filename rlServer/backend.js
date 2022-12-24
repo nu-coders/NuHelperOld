@@ -49,6 +49,14 @@ function currentSlot() {
   return slots[`${hour}`];
 }
 
+function toArray(rooms){
+  let result = [];
+  rooms.forEach((room) => {
+    result.push(room.id)
+  });
+  return result;
+}
+
 async function getRoom(room) {
   const roomData = db.collection("rooms").doc(`${room}`);
   let doc = await roomData.get();
@@ -107,25 +115,17 @@ async function getRooms(building) {
   if (slot == 0){
     if (building == 3){
       let data = await roomData.get();
-      data.forEach((room) => {
-        result.push(room.id)
-      });
+      result = toArray(data);
     }else if (building === 1 || building === 2) {
       let data = await roomData.where("building", "==", `${building}`).get();
-      data.forEach((room) => {
-        result.push(room.id);
-      });
+      result = toArray(data);
     }
   }else if (building === 3) {
     let data = await roomData.where(`${day}.${slot}.status`, "==", true).get();
-    data.forEach((room) => {
-      result.push(room.id)
-    });
+    result = toArray(data);
   } else if (building === 1 || building === 2) {
     let data = await roomData.where("building", "==", `${building}`).where(`${day}.${slot}.status`, "==", true).get();
-    data.forEach((room) => {
-      result.push(room.id);
-    });
+    result = toArray(data);    
   } else {
     return 0;
   }
