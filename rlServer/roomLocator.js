@@ -20,12 +20,11 @@ router.get("/api/getroom/", async (req, res) => {
   if (id == null || id == "") {
     res.status(404).json({ error: "Not a room" });
   } else {
-    let to_return = await backend.getRoom(id);
-    if (to_return === 0) {
+    let response = await backend.getRoom(id);
+    if (response === 0) {
       res.status(404).json({ error: "Not a room" });
     } else {
-      console.log(to_return);
-      res.send({ getroom: to_return });
+      res.send({ getroom: response });
     }
   }
 });
@@ -37,11 +36,11 @@ router.get("/api/getrooms/", async (req, res) => {
   if (building == null || building == "") {
     res.status(404).json({ error: "Not a building" });
   } else {
-    let to_return = await backend.getRooms(building);
-    if (to_return === 0) {
+    let response = await backend.getRooms(building);
+    if (response === 0) {
       res.status(404).json({ error: "Not a building" });
     } else {
-      res.send({ "getrooms": to_return });
+      res.send({ getrooms: response });
     }
   }
 });
@@ -53,11 +52,11 @@ router.get("/api/roomtable", async (req, res) => {
   if (id == null || id == "") {
     res.status(404).json({ error: "Not a room" });
   } else {
-    let to_return = await backend.roomTable(id);
-    if (to_return === 0) {
+    let response = await backend.roomTable(id);
+    if (response === 0) {
       res.status(404).json({ error: "Not a room" });
     } else {
-      res.send({ "roomtable": to_return });
+      res.send({ roomtable: response });
     }
   }
 });
@@ -69,11 +68,11 @@ router.get("/api/whatsin", async (req, res) => {
   if (id == null || id == "") {
     res.status(404).json({ error: "Not a room" });
   } else {
-    let to_return = await backend.whatsin(id);
-    if (to_return === 0) {
+    let response = await backend.whatsin(id);
+    if (response === 0) {
       res.status(404).json({ error: "Not a room" });
     } else {
-      res.send({ whatsin: to_return });
+      res.send({ whatsin: response });
     }
   }
 });

@@ -101,10 +101,10 @@ async function roomTable(room) {
 
 async function getRooms(building) {
   const roomData = db.collection("rooms");
-  // let slot = currentSlot();
-  let slot = "18";
   let day = new Date().getDay();
+  let slot = currentSlot();
   let result = [];
+
   if (building === 3) {
     let data = await roomData.where(`${day}.${slot}.status`, "==", true).get();
     data.forEach((room) => {
