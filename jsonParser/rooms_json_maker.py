@@ -137,7 +137,7 @@ def empty_vacant(input_json):
                     elif status == False:
                         input_json[room][day][slots[slot]]["E/V"] = "The room is occupied until the of today :("
                     elif status == True:
-                        input_json[room][day][slots[slot]]["E/V"] = "The room is vacant until the of today :)"
+                        input_json[room][day][slots[slot]]["E/V"] = "The room is vacant until the end of today :)"
 
                     temp_status = input_json[room][day][slots[i]]["status"]
     return input_json
