@@ -16,7 +16,7 @@ router.get("/api", (req, res) => {
 // ok
 router.get("/api/getroom/", async (req, res) => {
   // 127.0.0.1:8080/api/getroom/
-  let id = req.body["id"];
+  let id = req.query.id;
   if (id == null || id == "") {
     res.status(404).json({ error: "Not a room" });
   } else {
@@ -24,7 +24,7 @@ router.get("/api/getroom/", async (req, res) => {
     if (response === 0) {
       res.status(404).json({ error: "Not a room" });
     } else {
-      res.send({ getroom: response });
+      res.send( response );
     }
   }
 });
@@ -32,7 +32,7 @@ router.get("/api/getroom/", async (req, res) => {
 //ok
 router.get("/api/getrooms/", async (req, res) => {
   // http://127.0.0.1:8080/api/getrooms/
-  let building = req.body["building"];
+  let building = req.query.building;
   if (building == null || building == "") {
     res.status(404).json({ error: "Not a building" });
   } else {
@@ -40,7 +40,7 @@ router.get("/api/getrooms/", async (req, res) => {
     if (response === 0) {
       res.status(404).json({ error: "Not a building" });
     } else {
-      res.send({ getrooms: response });
+      res.send( response );
     }
   }
 });
@@ -48,7 +48,7 @@ router.get("/api/getrooms/", async (req, res) => {
 // ok
 router.get("/api/roomtable", async (req, res) => {
   // http://127.0.0.1:8080/api/roomtable/
-  let id = req.body["id"];
+  let id = req.query.id;
   if (id == null || id == "") {
     res.status(404).json({ error: "Not a room" });
   } else {
@@ -56,7 +56,7 @@ router.get("/api/roomtable", async (req, res) => {
     if (response === 0) {
       res.status(404).json({ error: "Not a room" });
     } else {
-      res.send({ roomtable: response });
+      res.send( response );
     }
   }
 });
@@ -64,7 +64,7 @@ router.get("/api/roomtable", async (req, res) => {
 // ok
 router.get("/api/whatsin", async (req, res) => {
   // http://127.0.0.1:8080/api/whatsin/
-  let id = req.body["id"];
+  let id = req.query.id;
   if (id == null || id == "") {
     res.status(404).json({ error: "Not a room" });
   } else {
@@ -72,7 +72,7 @@ router.get("/api/whatsin", async (req, res) => {
     if (response === 0) {
       res.status(404).json({ error: "Not a room" });
     } else {
-      res.send({ whatsin: response });
+      res.send( response );
     }
   }
 });
