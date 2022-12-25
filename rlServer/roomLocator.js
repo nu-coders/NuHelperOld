@@ -1,5 +1,4 @@
 const express = require("express");
-const { database } = require("firebase-admin");
 
 const backend = require("./backend.js");
 
@@ -24,7 +23,7 @@ router.get("/api/getroom/", async (req, res) => {
     if (response === 0) {
       res.status(404).json({ error: "Not a room" });
     } else {
-      res.send( response );
+      res.send(response);
     }
   }
 });
@@ -40,7 +39,7 @@ router.get("/api/getrooms/", async (req, res) => {
     if (response === 0) {
       res.status(404).json({ error: "Not a building" });
     } else {
-      res.send( response );
+      res.send(response);
     }
   }
 });
@@ -56,7 +55,7 @@ router.get("/api/roomtable", async (req, res) => {
     if (response === 0) {
       res.status(404).json({ error: "Not a room" });
     } else {
-      res.send( response );
+      res.send(response);
     }
   }
 });
@@ -72,7 +71,7 @@ router.get("/api/whatsin", async (req, res) => {
     if (response === 0) {
       res.status(404).json({ error: "Not a room" });
     } else {
-      res.send( response );
+      res.send(response);
     }
   }
 });
