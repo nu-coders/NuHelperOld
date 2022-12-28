@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
@@ -12,8 +13,10 @@ class ChillPage extends StatefulWidget {
 class _ChillPageState extends State<ChillPage> {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text("ChillPage"),
+   return Scaffold(
+      appBar: AppBar(
+        title: (Text("chill")),
+      ),
     );
   }
 }

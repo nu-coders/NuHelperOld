@@ -25,16 +25,23 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: const Text("Home")),
+        // appBar: AppBar(title: const Text("hi8")),
         body: pages[selectedIndex],
         bottomNavigationBar: NavigationBar(
-          destinations: const [
-            NavigationDestination(icon: Icon(Icons.home), label: "home"),
+
+          destinations: [
             NavigationDestination(
-                icon: Icon(Icons.room), label: "Room Locator"),
+                icon: Icon(Icons.home, color: Colors.lightBlue[700]),
+                label: "home"),
             NavigationDestination(
-                icon: Icon(Icons.schedule), label: "TableMaker"),
-            NavigationDestination(icon: Icon(Icons.info), label: "About Us"),
+                icon: Icon(Icons.room, color: Colors.lightBlue[700]),
+                label: "Room Locator"),
+            NavigationDestination(
+                icon: Icon(Icons.schedule, color: Colors.lightBlue[700]),
+                label: "TableMaker"),
+            NavigationDestination(
+                icon: Icon(Icons.info, color: Colors.lightBlue[700]),
+                label: "About Us"),
           ],
           onDestinationSelected: (index) {
             setState(() {

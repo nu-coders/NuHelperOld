@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:front_end/pages/intro_page.dart';
 import 'package:front_end/pages/login_screen.dart';
 
 void main() {
@@ -12,8 +11,11 @@ class Main extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primarySwatch: Colors.lightBlue,
+      ),
       debugShowCheckedModeBanner: false,
-      home: LoginPage(), 
+      home: LoginPage(),
     );
   }
 }
