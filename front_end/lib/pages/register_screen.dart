@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:front_end/components/button.dart';
-import 'package:front_end/pages/register_screen.dart';
+import 'package:front_end/pages/home_page.dart';
 
 import '../components/text_field.dart';
-import 'home_page.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class RegisterPage extends StatelessWidget {
+  RegisterPage({super.key});
   final email = TextEditingController();
   final password = TextEditingController();
+  final passwordConfirnation = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +43,12 @@ class LoginPage extends StatelessWidget {
                         hintText: "Your Password",
                         obscureText: true,
                         controller: password),
+                    MyTextField(
+                        hintText: "Re-enter Your Password",
+                        obscureText: true,
+                        controller: passwordConfirnation),
                     MyButton(
-                      text: "Login",
+                      text: "Register",
                       color: const Color.fromARGB(255, 39, 187, 255),
                       pressFunction: () {},
                     ),
@@ -53,13 +57,9 @@ class LoginPage extends StatelessWidget {
                         Expanded(
                           child: MyButton(
                               pressFunction: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => RegisterPage(),
-                                  ),
-                                );
+                                Navigator.of(context).pop();
                               },
-                              text: "Register",
+                              text: "Registered ?",
                               color: const Color.fromARGB(255, 45, 130, 199)),
                         ),
                         Expanded(

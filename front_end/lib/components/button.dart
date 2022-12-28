@@ -5,20 +5,18 @@ import 'package:flutter/src/widgets/framework.dart';
 class MyButton extends StatelessWidget {
   Color color;
   String text;
-  VoidCallback  a;
-  MyButton({
-    super.key,
-    required this.color,
-    required this.text,
-    required this.a
-  });
+  VoidCallback pressFunction;
+  MyButton(
+      {super.key, required this.color, required this.text, required this.pressFunction});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: a,
+      onTap: pressFunction,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        // padding: const EdgeInsets.symmetric(horizontal: 8),
+        // padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+        padding: const EdgeInsets.fromLTRB(8, 0, 8, 15),
         child: Container(
             decoration: BoxDecoration(
               color: color,
