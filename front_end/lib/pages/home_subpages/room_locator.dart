@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:front_end/backend/room_locator.dart';
+import 'package:front_end/backend/shared_variables.dart';
+import 'package:get/get.dart';
 
 import '../loading_page.dart';
 
@@ -15,50 +17,51 @@ class RoomLocatorPage extends StatefulWidget {
 
 class RoomLocatorPageState extends State<RoomLocatorPage> {
   List<dynamic> rooms = [];
+  final SharedVariables abc = Get.put(SharedVariables());
+
   RoomLocator backend = RoomLocator();
   var loaded = false;
   @override
-  void initState() {
-    print(rooms);
-    backend.getRooms(1).then((value) {
-      setState(() {
-        rooms = value;
-        loaded = true;
-        print("object000000000000000000");
-      });
-    });
+  // void initState() {
+  //   print(abc.roomsz);
+  //   // backend.getRooms(1).then((value) {
+  //     setState(() {
+  //       abc.add(value);
+  //       rooms = value;
+  //       loaded = true;
+  //       // print("object000000000000000000");
+  //     });
+  //   });
 
-    super.initState();
-  }
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return !loaded
-        ? IntroPage()
-        : Scaffold(
-            appBar: AppBar(
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: () {
-                    showSearch(
-                      context: context,
-                      delegate: SearchBar(),
-                    );
-                  },
-                )
-              ],
-              title: (Text("roomlocator")),
-            ),
-            body: ListView.builder(
-              itemCount: rooms.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text('${rooms[index]}'),
-                );
-              },
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: SearchBar(),
+              );
+            },
+          )
+        ],
+        title: (Text("roomlocator")),
+      ),
+      body: ListView.builder(
+        itemCount: rooms.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text('${rooms[index]}'),
           );
+        },
+      ),
+    );
 
     // return const Center(
     //   child: Text("RoomLocatorPage"),
@@ -80,8 +83,8 @@ class SearchBar extends SearchDelegate {
             }
             query = '';
           },
-          icon: Icon(Icons.clear)),
-      IconButton(onPressed: () {}, icon: Icon(Icons.menu))
+          icon: const Icon(Icons.clear)),
+      IconButton(onPressed: () {}, icon: const Icon(Icons.menu))
     ];
   }
 
@@ -96,7 +99,7 @@ class SearchBar extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Center();
+    return const Center();
   }
 
   @override
