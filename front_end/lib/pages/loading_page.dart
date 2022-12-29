@@ -16,7 +16,7 @@ class _IntroPageState extends State<IntroPage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.red,
-        appBar: AppBar(title: Text("hellop")),
+        // appBar: AppBar(title: Text("hellop")),
         body: Center(
             child: Column(
           children: [

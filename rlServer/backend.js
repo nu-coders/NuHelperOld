@@ -81,13 +81,13 @@ async function whatsin(room) {
   if (!doc.exists) {
     return 0;
   } else if(slot == 0){
-    return "Free Room";
+    return {"status":"Free Room"};
   } else {
     let day = new Date().getDay();
     let data = doc.data()[day][slot];
     let status = data["status"];
     if (status === true) {
-      return "Free Room";
+      return {"status":"Free Room"};
     } 
     delete data.status;
     return data;
@@ -116,14 +116,14 @@ async function getRooms(building) {
     if (building == 3){
       let data = await roomData.get();
       result = toArray(data);
-    }else if (building === 1 || building === 2) {
+    }else if (building == 1 || building == 2) {
       let data = await roomData.where("building", "==", `${building}`).get();
       result = toArray(data);
     }
-  }else if (building === 3) {
+  }else if (building == 3) {
     let data = await roomData.where(`${day}.${slot}.status`, "==", true).get();
     result = toArray(data);
-  } else if (building === 1 || building === 2) {
+  } else if (building == 1 || building == 2) {
     let data = await roomData.where("building", "==", `${building}`).where(`${day}.${slot}.status`, "==", true).get();
     result = toArray(data);    
   } else {

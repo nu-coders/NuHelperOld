@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:front_end/backend/room_locator.dart';
+
+import '../loading_page.dart';
 
 class RoomLocatorPage extends StatefulWidget {
   const RoomLocatorPage({super.key});
@@ -11,37 +14,51 @@ class RoomLocatorPage extends StatefulWidget {
 }
 
 class RoomLocatorPageState extends State<RoomLocatorPage> {
-  final List<String> _suggestions = [
-    'Afeganistan',
-    'Albania',
-    'Algeria',
-    'Australia',
-    'Brazil',
-    'German',
-    'Madagascar',
-    'Mozambique',
-    'Portugal',
-    'Zambia'
-  ];
-  String searchValue = 'temp';
+  List<dynamic> rooms = [];
+  RoomLocator backend = RoomLocator();
+  var loaded = false;
+  @override
+  void initState() {
+    print(rooms);
+    backend.getRooms(1).then((value) {
+      setState(() {
+        rooms = value;
+        loaded = true;
+        print("object000000000000000000");
+      });
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate: SearchBar(),
-              );
-            },
-          )
-        ],
-        title: (const Text("roomlocator")),
-      ),
-    );
+    return !loaded
+        ? IntroPage()
+        : Scaffold(
+            appBar: AppBar(
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {
+                    showSearch(
+                      context: context,
+                      delegate: SearchBar(),
+                    );
+                  },
+                )
+              ],
+              title: (Text("roomlocator")),
+            ),
+            body: ListView.builder(
+              itemCount: rooms.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text('${rooms[index]}'),
+                );
+              },
+            ),
+          );
 
     // return const Center(
     //   child: Text("RoomLocatorPage"),
@@ -51,6 +68,7 @@ class RoomLocatorPageState extends State<RoomLocatorPage> {
 
 class SearchBar extends SearchDelegate {
   List<String> sug1 = ["hello", "world", "wir", "potato"];
+  SearchBar();
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -71,16 +89,14 @@ class SearchBar extends SearchDelegate {
   Widget? buildLeading(BuildContext context) {
     return IconButton(
         onPressed: () {
-          close(context, null);
+          close(context, query);
         },
-        icon: Icon(Icons.arrow_back));
+        icon: const Icon(Icons.arrow_back));
   }
 
   @override
   Widget buildResults(BuildContext context) {
-    return Center(
-      child: Text(query),
-    );
+    return Center();
   }
 
   @override
@@ -98,7 +114,7 @@ class SearchBar extends SearchDelegate {
             title: Text(sugg),
             onTap: () {
               query = sugg;
-              showResults(context);
+              close(context, query);
             },
           );
         }),

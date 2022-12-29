@@ -28,7 +28,6 @@ class _HomePageState extends State<HomePage> {
         // appBar: AppBar(title: const Text("hi8")),
         body: pages[selectedIndex],
         bottomNavigationBar: NavigationBar(
-
           destinations: [
             NavigationDestination(
                 icon: Icon(Icons.home, color: Colors.lightBlue[700]),
