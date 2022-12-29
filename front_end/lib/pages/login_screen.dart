@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:front_end/components/button.dart';
 import 'package:front_end/pages/register_screen.dart';
 

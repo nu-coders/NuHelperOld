@@ -1,12 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:front_end/backend/room_locator.dart';
 import 'package:front_end/backend/shared_variables.dart';
 import 'package:get/get.dart';
-
-import '../loading_page.dart';
 
 class RoomLocatorPage extends StatefulWidget {
   const RoomLocatorPage({super.key});
@@ -51,7 +46,7 @@ class RoomLocatorPageState extends State<RoomLocatorPage> {
             },
           )
         ],
-        title: (Text("roomlocator")),
+        title: (const Text("Room Locator")),
       ),
       body: ListView.builder(
         itemCount: rooms.length,

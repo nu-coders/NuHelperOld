@@ -1,13 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:front_end/components/about_us_button.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../components/button.dart';
-import '../../components/text_field.dart';
 
 class AboutUsPage extends StatefulWidget {
   const AboutUsPage({super.key});
@@ -21,8 +14,6 @@ class _AboutUsPageState extends State<AboutUsPage> {
 
   @override
   Widget build(BuildContext context) {
-    var email;
-
     return Scaffold(
       body: Column(
         children: [

@@ -1,5 +1,3 @@
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
 import 'package:front_end/pages/home_subpages/about_us.dart';
 import 'package:front_end/pages/home_subpages/chill_page.dart';
@@ -14,7 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Widget> pages = [
+  List<Widget> pages = const [
     ChillPage(),
     RoomLocatorPage(),
     TableMakerPage(),
@@ -51,6 +49,5 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-    ;
   }
 }
