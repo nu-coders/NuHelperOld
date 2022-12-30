@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:front_end/components/search_bar_tm.dart';
+import 'package:front_end/components/tm/search_bar_tm.dart';
 import 'package:get/get.dart';
 
 import '../../backend/shared_variables.dart';
+import '../../components/tm/cart.dart';
 
 class TableMakerPage extends StatefulWidget {
   const TableMakerPage({super.key});
@@ -25,11 +26,16 @@ class _TableMakerPageState extends State<TableMakerPage> {
             onPressed: () {
               showSearch(
                 context: context,
-                delegate: SearchBarTM(
-                    ["hello", 'Mario', 'sus', "world", "wir", "potato"]),
+                delegate: SearchBarTM(variables.coursesSuggestions),
               );
             },
-          )
+          ),
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () => showDialog(
+                context: context,
+                builder: (BuildContext context) => const CoursesCart()),
+          ),
         ],
       ),
     );

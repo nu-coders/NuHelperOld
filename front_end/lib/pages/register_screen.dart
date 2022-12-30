@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:front_end/components/button.dart';
+import 'package:front_end/components/login/button.dart';
 import 'package:front_end/pages/home_page.dart';
 
-import '../components/text_field.dart';
+import '../components/login/text_field.dart';
 
 class RegisterPage extends StatelessWidget {
   RegisterPage({super.key});
@@ -45,7 +45,7 @@ class RegisterPage extends StatelessWidget {
                         hintText: "Re-enter Your Password",
                         obscureText: true,
                         controller: passwordConfirnation),
-                    MyButton(
+                    CustomButton(
                       text: "Register",
                       color: const Color.fromARGB(255, 39, 187, 255),
                       pressFunction: () {},
@@ -53,7 +53,7 @@ class RegisterPage extends StatelessWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: MyButton(
+                          child: CustomButton(
                               pressFunction: () {
                                 Navigator.of(context).pop();
                               },
@@ -61,7 +61,7 @@ class RegisterPage extends StatelessWidget {
                               color: const Color.fromARGB(255, 45, 130, 199)),
                         ),
                         Expanded(
-                          child: MyButton(
+                          child: CustomButton(
                               pressFunction: () {
                                 Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(

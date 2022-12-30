@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front_end/components/rl/room_card.dart';
 
 class SearchBar extends SearchDelegate {
   List<String> suggestions;
@@ -31,9 +32,8 @@ class SearchBar extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return const Center(
-      child: Text("This a serious bug please report\nthx, Devs"),
-    );
+    return RoomCard(course: "course", room: query, status: "status");
+    // child: Text("This a serious bug please report\nthx, Devs"),
   }
 
   @override

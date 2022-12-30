@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../backend/shared_variables.dart';
+import '../../backend/shared_variables.dart';
 
 class CoursesCart extends StatefulWidget {
   const CoursesCart({super.key});

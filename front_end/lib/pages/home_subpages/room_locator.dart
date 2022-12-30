@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:front_end/backend/room_locator.dart';
 import 'package:front_end/backend/shared_variables.dart';
+import 'package:front_end/components/rl/room_card.dart';
 import 'package:get/get.dart';
 
-import '../../components/search_bar.dart';
+import '../../components/rl/search_bar.dart';
 
 class RoomLocatorPage extends StatefulWidget {
   const RoomLocatorPage({super.key});
@@ -13,7 +14,6 @@ class RoomLocatorPage extends StatefulWidget {
 }
 
 class RoomLocatorPageState extends State<RoomLocatorPage> {
-  List<dynamic> rooms = [];
   final SharedVariables abc = Get.put(SharedVariables());
 
   RoomLocator backend = RoomLocator();
@@ -52,10 +52,11 @@ class RoomLocatorPageState extends State<RoomLocatorPage> {
         title: (const Text("Room Locator")),
       ),
       body: ListView.builder(
-        itemCount: rooms.length,
+        itemCount: 15,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text('${rooms[index]}'),
+            title: RoomCard(
+                course: "course", room: index.toString(), status: "status"),
           );
         },
       ),

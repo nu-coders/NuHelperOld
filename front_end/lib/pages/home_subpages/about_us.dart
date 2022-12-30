@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:front_end/components/about_us_button.dart';
-import 'package:front_end/components/cart.dart';
+import 'package:front_end/components/about_us/about_us_button.dart';
+import 'package:front_end/components/tm/cart.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutUsPage extends StatefulWidget {
