@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front_end/components/about_us_button.dart';
+import 'package:front_end/components/cart.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutUsPage extends StatefulWidget {
@@ -39,11 +40,11 @@ class _AboutUsPageState extends State<AboutUsPage> {
           AboutUsButton(
             text: "Devs",
             icon: Icons.code,
-            pressFunction: () => showDialog<String>(
+            pressFunction: () => showDialog(
               context: context,
               builder: (BuildContext context) => AlertDialog(
-                title: const Text('AlertDialog Title'),
-                content: const Text('Developed by:\n Bahaa\n Mohamed\n Yusuf'),
+                title: const Text('Developed by:'),
+                content: const Text(' Bahaa\n Mohamed\n Yusuf'),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, 'OK'),
@@ -73,6 +74,21 @@ class _AboutUsPageState extends State<AboutUsPage> {
               }
             },
           ),
+          AboutUsButton(
+              text: "toast",
+              icon: Icons.breakfast_dining,
+              pressFunction: () => showDialog(
+                  context: context,
+                  builder: (BuildContext context) => CoursesCart())
+              // {
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   SnackBar(
+              //     content: Text("Sending Message"),
+              //   ),
+              // );
+              // },
+
+              ),
         ],
       ),
     );

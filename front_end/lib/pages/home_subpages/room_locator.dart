@@ -3,6 +3,8 @@ import 'package:front_end/backend/room_locator.dart';
 import 'package:front_end/backend/shared_variables.dart';
 import 'package:get/get.dart';
 
+import '../../components/search_bar.dart';
+
 class RoomLocatorPage extends StatefulWidget {
   const RoomLocatorPage({super.key});
 
@@ -41,7 +43,8 @@ class RoomLocatorPageState extends State<RoomLocatorPage> {
             onPressed: () {
               showSearch(
                 context: context,
-                delegate: SearchBar(),
+                delegate: SearchBar(
+                    ["hello", 'Mario', 'sus', "world", "wir", "potato"]),
               );
             },
           )
@@ -61,61 +64,5 @@ class RoomLocatorPageState extends State<RoomLocatorPage> {
     // return const Center(
     //   child: Text("RoomLocatorPage"),
     // );
-  }
-}
-
-class SearchBar extends SearchDelegate {
-  List<String> sug1 = ["hello", "world", "wir", "potato"];
-  SearchBar();
-
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return [
-      IconButton(
-          onPressed: () {
-            if (query.isEmpty) {
-              close(context, null);
-            }
-            query = '';
-          },
-          icon: const Icon(Icons.clear)),
-      IconButton(onPressed: () {}, icon: const Icon(Icons.menu))
-    ];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-        onPressed: () {
-          close(context, query);
-        },
-        icon: const Icon(Icons.arrow_back));
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return const Center();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    List<String> sug = sug1.where((res) {
-      final result = res.toLowerCase();
-      final inp = query.toLowerCase();
-      return result.contains(inp);
-    }).toList();
-
-    return ListView.builder(
-        itemBuilder: ((context, index) {
-          final sugg = sug[index];
-          return ListTile(
-            title: Text(sugg),
-            onTap: () {
-              query = sugg;
-              close(context, query);
-            },
-          );
-        }),
-        itemCount: sug.length);
   }
 }
