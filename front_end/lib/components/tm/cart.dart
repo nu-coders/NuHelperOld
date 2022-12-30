@@ -26,7 +26,12 @@ class _CoursesCartState extends State<CoursesCart> {
               title: SizedBox(
                 width: double.infinity,
                 child: TextButton(
-                  style: const ButtonStyle(alignment: Alignment.centerLeft),
+                  style: const ButtonStyle(
+                    alignment: Alignment.centerLeft,
+                    textStyle: MaterialStatePropertyAll<TextStyle?>(
+                      TextStyle(fontSize: 16),
+                    ),
+                  ),
                   onPressed: () {
                     String course = variables.courses.elementAt(index);
                     setState(() {

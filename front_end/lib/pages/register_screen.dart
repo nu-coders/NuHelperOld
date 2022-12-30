@@ -1,14 +1,71 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:front_end/components/login/button.dart';
 import 'package:front_end/pages/home_page.dart';
+import 'package:front_end/pages/login_screen.dart';
 
 import '../components/login/text_field.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   RegisterPage({super.key});
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
   final email = TextEditingController();
+
   final password = TextEditingController();
-  final passwordConfirnation = TextEditingController();
+
+  final passwordConfirmation = TextEditingController();
+
+  void register() async {
+    showDialog(
+      context: context,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+    try {
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: email.text, password: password.text)
+          .whenComplete(() {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Successful Registration"),
+          ),
+        );
+      });
+
+      // Navigator.of(context).pop();
+    } on FirebaseAuthException catch (error) {
+      if (error.code == "invalid-email") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Invalid Email"),
+          ),
+        );
+      } else if (error.code == "weak-password") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Weak Password"),
+          ),
+        );
+      } else if (error.code == "email-already-in-use") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Email Already in Use"),
+          ),
+        );
+      }
+      print(error.code);
+      print("errrooooooooooooooooooooooo");
+    }
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +101,30 @@ class RegisterPage extends StatelessWidget {
                     MyTextField(
                         hintText: "Re-enter Your Password",
                         obscureText: true,
-                        controller: passwordConfirnation),
+                        controller: passwordConfirmation),
                     CustomButton(
                       text: "Register",
                       color: const Color.fromARGB(255, 39, 187, 255),
-                      pressFunction: () {},
+                      pressFunction: () {
+                        if (password.text.isNotEmpty && email.text.isNotEmpty) {
+                          if (password.text == passwordConfirmation.text) {
+                            register();
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    "Password and Password Confirmation are not the same"),
+                              ),
+                            );
+                          }
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Fill Password/Email Field"),
+                            ),
+                          );
+                        }
+                      },
                     ),
                     Row(
                       children: [
@@ -57,7 +133,7 @@ class RegisterPage extends StatelessWidget {
                               pressFunction: () {
                                 Navigator.of(context).pop();
                               },
-                              text: "Registered ?",
+                              text: "Registered?",
                               color: const Color.fromARGB(255, 45, 130, 199)),
                         ),
                         Expanded(

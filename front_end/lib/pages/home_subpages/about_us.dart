@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:front_end/components/about_us/about_us_button.dart';
 import 'package:front_end/components/tm/cart.dart';
+import 'package:front_end/pages/login_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutUsPage extends StatefulWidget {
@@ -77,9 +80,12 @@ class _AboutUsPageState extends State<AboutUsPage> {
           AboutUsButton(
               text: "toast",
               icon: Icons.breakfast_dining,
-              pressFunction: () => showDialog(
-                  context: context,
-                  builder: (BuildContext context) => CoursesCart())
+              pressFunction: () {
+                print(FirebaseAuth.instance.currentUser!.email);
+              }
+              // showDialog(
+              //     context: context,
+              //     builder: (BuildContext context) => CoursesCart())
               // {
               // ScaffoldMessenger.of(context).showSnackBar(
               //   SnackBar(
@@ -89,6 +95,19 @@ class _AboutUsPageState extends State<AboutUsPage> {
               // },
 
               ),
+          // false
+          FirebaseAuth.instance.currentUser?.uid == null
+              ? AboutUsButton(
+                  text: "Login",
+                  icon: Icons.login,
+                  pressFunction: () => Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                      (Route<dynamic> route) => false),
+                )
+              : AboutUsButton(
+                  text: "Logout",
+                  icon: Icons.logout,
+                  pressFunction: () => FirebaseAuth.instance.signOut())
         ],
       ),
     );
