@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:front_end/components/tm/days_list.dart';
 import 'package:front_end/components/tm/search_bar_tm.dart';
+import 'package:front_end/components/tm/slider.dart';
 import 'package:get/get.dart';
 
 import '../../backend/shared_variables.dart';
@@ -14,6 +16,8 @@ class TableMakerPage extends StatefulWidget {
 
 class _TableMakerPageState extends State<TableMakerPage> {
   final SharedVariables variables = Get.put(SharedVariables());
+  double atendDays = 1;
+  bool temp = false;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +40,37 @@ class _TableMakerPageState extends State<TableMakerPage> {
                 context: context,
                 builder: (BuildContext context) => const CoursesCart()),
           ),
+        ],
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(
+            width: double.infinity,
+          ),
+          const Text(
+            "Days to attend:",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+          ),
+          const SizedBox(height: 10),
+          const TableMakerSlider(),
+          const SizedBox(height: 300, child: DaysList()),
+          const SizedBox(height: 10),
+          ElevatedButton(
+              onPressed: () {
+                if (variables.selectedDays.length !=
+                    variables.attendDays.value) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      duration: Duration(milliseconds: 2000),
+                      content: Text(
+                          "You selected ${variables.selectedDays.length} day/s and want to attend ${variables.attendDays.value} day/s HOW???"),
+                    ),
+                  );
+                }
+              },
+              child: const Text("Create my Table"))
         ],
       ),
     );

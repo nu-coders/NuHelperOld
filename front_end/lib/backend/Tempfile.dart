@@ -2,7 +2,10 @@ void main() async {
   // DateTime time = DateTime.now();
   // print(time.minute);
   // test();
-  test();
+  // test();
+  bool? a;
+  if (a==null)
+  print("yes");
 }
 
 void test() async {

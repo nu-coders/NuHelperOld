@@ -1,7 +1,12 @@
+import 'dart:ffi';
+
 import 'package:get/get.dart';
 
 class SharedVariables extends GetxController {
   Set<String> coursesCart = <String>{}.obs;
+  var attendDays = 0.obs;
+  Set<int> selectedDays = <int>{}.obs;
+
   List<String> coursesSuggestions = [
     "CSCI311",
     'CSCI201',
@@ -28,5 +33,9 @@ class SharedVariables extends GetxController {
 
   void clearCourses() {
     coursesCart.clear();
+  }
+
+  void updateSelectedDays(Set<int> input) {
+    selectedDays = input;
   }
 }

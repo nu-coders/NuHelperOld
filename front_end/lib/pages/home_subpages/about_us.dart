@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:front_end/backend/shared_variables.dart';
 import 'package:front_end/components/about_us/about_us_button.dart';
 import 'package:front_end/components/tm/cart.dart';
 import 'package:front_end/pages/login_screen.dart';
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutUsPage extends StatefulWidget {
@@ -14,7 +16,7 @@ class AboutUsPage extends StatefulWidget {
 }
 
 class _AboutUsPageState extends State<AboutUsPage> {
-  get password => null;
+  final SharedVariables variables = Get.put(SharedVariables());
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +83,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
               text: "toast",
               icon: Icons.breakfast_dining,
               pressFunction: () {
-                print(FirebaseAuth.instance.currentUser!.emailVerified);
+                print(variables.attendDays);
               }
               // showDialog(
               //     context: context,

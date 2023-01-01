@@ -4,6 +4,7 @@ import 'package:front_end/backend/shared_variables.dart';
 import 'package:front_end/components/rl/room_card.dart';
 import 'package:get/get.dart';
 
+import '../../components/rl/room_cardV2.dart';
 import '../../components/rl/search_bar.dart';
 
 class RoomLocatorPage extends StatefulWidget {
@@ -43,8 +44,7 @@ class RoomLocatorPageState extends State<RoomLocatorPage> {
             onPressed: () {
               showSearch(
                 context: context,
-                delegate: SearchBar(
-                    variables.roomsSuggestions),
+                delegate: SearchBar(variables.roomsSuggestions),
               );
             },
           )
@@ -56,7 +56,7 @@ class RoomLocatorPageState extends State<RoomLocatorPage> {
         itemBuilder: (context, index) {
           final room = variables.rooms[index];
           return ListTile(
-            title: RoomCard(course: room[1], room: room[0], status: room[2]),
+            title: RoomCardV2(course: room[1], room: room[0], status: room[2]),
           );
         },
       ),
