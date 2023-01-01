@@ -81,7 +81,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
               text: "toast",
               icon: Icons.breakfast_dining,
               pressFunction: () {
-                print(FirebaseAuth.instance.currentUser!.email);
+                print(FirebaseAuth.instance.currentUser!.emailVerified);
               }
               // showDialog(
               //     context: context,

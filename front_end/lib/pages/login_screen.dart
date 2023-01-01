@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:front_end/components/login/button.dart';
 import 'package:front_end/pages/register_screen.dart';
@@ -8,7 +7,7 @@ import '../components/login/text_field.dart';
 import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -26,44 +25,50 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email.text, password: password.text);
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: email.text.trim(), password: password.text.trim())
+          .whenComplete(() => Navigator.pop(context));
     } on FirebaseAuthException catch (error) {
       if (error.code == "wrong-password") {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
+            duration: Duration(milliseconds: 1500),
             content: Text("Wrong email/password combination."),
           ),
         );
       } else if (error.code == "user-not-found") {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
+            duration: Duration(milliseconds: 1500),
             content: Text("Wrong email/password combination."),
           ),
         );
       } else if (error.code == "invalid-email") {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
+            duration: Duration(milliseconds: 1500),
             content: Text("Email address is invalid."),
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
+            duration: Duration(milliseconds: 1500),
             content: Text("Login failed. Please try again."),
           ),
         );
       }
+      Navigator.pop(context);
     }
-    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
-        // resizeToAvoidBottomInset: false,
         child: Column(
           children: [
             Flexible(
@@ -93,7 +98,17 @@ class _LoginPageState extends State<LoginPage> {
                       text: "Login",
                       color: const Color.fromARGB(255, 39, 187, 255),
                       pressFunction: () {
-                        login();
+                        if (email.text.isNotEmpty || password.text.isNotEmpty) {
+                          login();
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              duration: Duration(milliseconds: 1500),
+                              content:
+                                  Text("Please fill Email/Password field."),
+                            ),
+                          );
+                        }
                       },
                     ),
                     Row(

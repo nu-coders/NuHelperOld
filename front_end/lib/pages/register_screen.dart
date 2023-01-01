@@ -2,12 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:front_end/components/login/button.dart';
 import 'package:front_end/pages/home_page.dart';
-import 'package:front_end/pages/login_screen.dart';
-
 import '../components/login/text_field.dart';
 
 class RegisterPage extends StatefulWidget {
-  RegisterPage({super.key});
+  const RegisterPage({super.key});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -28,19 +26,18 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
     try {
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: email.text, password: password.text)
-          .whenComplete(() {
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Successful Registration"),
-          ),
-        );
-      });
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email.text.trim(), password: password.text.trim());
 
-      // Navigator.of(context).pop();
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Successful Registration"),
+        ),
+      );
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const HomePage()),
+          (Route<dynamic> route) => false);
     } on FirebaseAuthException catch (error) {
       if (error.code == "invalid-email") {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -62,9 +59,9 @@ class _RegisterPageState extends State<RegisterPage> {
         );
       }
       print(error.code);
-      print("errrooooooooooooooooooooooo");
+      print("errrooooooooooooooooooooooo/register");
+      Navigator.pop(context);
     }
-    Navigator.pop(context);
   }
 
   @override

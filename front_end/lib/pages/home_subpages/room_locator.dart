@@ -14,7 +14,7 @@ class RoomLocatorPage extends StatefulWidget {
 }
 
 class RoomLocatorPageState extends State<RoomLocatorPage> {
-  final SharedVariables abc = Get.put(SharedVariables());
+  final SharedVariables variables = Get.put(SharedVariables());
 
   RoomLocator backend = RoomLocator();
   var loaded = false;
@@ -44,7 +44,7 @@ class RoomLocatorPageState extends State<RoomLocatorPage> {
               showSearch(
                 context: context,
                 delegate: SearchBar(
-                    ["hello", 'Mario', 'sus', "world", "wir", "potato"]),
+                    variables.roomsSuggestions),
               );
             },
           )
@@ -52,11 +52,11 @@ class RoomLocatorPageState extends State<RoomLocatorPage> {
         title: (const Text("Room Locator")),
       ),
       body: ListView.builder(
-        itemCount: 15,
+        itemCount: variables.rooms.length,
         itemBuilder: (context, index) {
+          final room = variables.rooms[index];
           return ListTile(
-            title: RoomCard(
-                course: "course", room: index.toString(), status: "status"),
+            title: RoomCard(course: room[1], room: room[0], status: room[2]),
           );
         },
       ),

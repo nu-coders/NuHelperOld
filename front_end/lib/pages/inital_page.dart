@@ -14,9 +14,20 @@ class IntialPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return const HomePage();
+            // if (FirebaseAuth.instance.currentUser!.emailVerified) {
+              return  HomePage();
+            // }
+            // FirebaseAuth.instance.signOut();
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   const SnackBar(
+            //     duration: Duration(),
+            //     content: Text("Please verify your email."),
+            //   ),
+            // );
+            // print("dataaaaaaa:${snapshot.hasData}");
+            // print("please verify your email");
           }
-          return LoginPage();
+          return  LoginPage();
         },
       ),
     );

@@ -62,8 +62,8 @@ class SearchBarTM extends SearchDelegate {
             onTap: () {
               query = course;
               String response = "Already in your cart";
-              if (!variables.courses.contains(course)) {
-                variables.courses.add(query);
+              if (!variables.coursesCart.contains(course)) {
+                variables.coursesCart.add(query);
                 response = "Added to your cart";
               }
               ScaffoldMessenger.of(context).showSnackBar(

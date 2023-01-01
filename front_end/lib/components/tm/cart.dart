@@ -15,35 +15,40 @@ class _CoursesCartState extends State<CoursesCart> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('In Your Cart'),
+      title: const Text('Courses Cart'),
       content: SizedBox(
         width: 300,
         height: 200,
-        child: ListView.builder(
-          itemCount: variables.courses.length,
-          itemBuilder: ((context, index) {
-            return ListTile(
-              title: SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  style: const ButtonStyle(
-                    alignment: Alignment.centerLeft,
-                    textStyle: MaterialStatePropertyAll<TextStyle?>(
-                      TextStyle(fontSize: 16),
+        child: variables.coursesCart.isEmpty
+            ? const Center(
+                child: Text("Your Cart is Empty :)"),
+              )
+            : ListView.builder(
+                itemCount: variables.coursesCart.length,
+                itemBuilder: ((context, index) {
+                  return ListTile(
+                    title: SizedBox(
+                      width: double.infinity,
+                      child: TextButton(
+                        style: const ButtonStyle(
+                          alignment: Alignment.centerLeft,
+                          textStyle: MaterialStatePropertyAll<TextStyle?>(
+                            TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        onPressed: () {
+                          String course =
+                              variables.coursesCart.elementAt(index);
+                          setState(() {
+                            variables.removeCourse(course);
+                          });
+                        },
+                        child: Text(variables.coursesCart.elementAt(index)),
+                      ),
                     ),
-                  ),
-                  onPressed: () {
-                    String course = variables.courses.elementAt(index);
-                    setState(() {
-                      variables.removeCourse(course);
-                    });
-                  },
-                  child: Text(variables.courses.elementAt(index)),
-                ),
+                  );
+                }),
               ),
-            );
-          }),
-        ),
       ),
       actions: [
         TextButton(
