@@ -1,7 +1,7 @@
-const e = require("express");
 const { initializeApp, cert } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
 const serviceAccount = require("./key.json");
+const { setTimeout } = require("timers/promises");
 
 initializeApp({
   credential: cert(serviceAccount),
@@ -49,10 +49,10 @@ function currentSlot() {
   return slots[`${hour}`];
 }
 
-function toArray(rooms){
+function toArray(rooms) {
   let result = [];
   rooms.forEach((room) => {
-    result.push(room.id)
+    result.push(room.id);
   });
   return result;
 }
@@ -64,8 +64,14 @@ async function getRoom(room) {
 
   if (!doc.exists) {
     return 0;
-  } else if(slot == 0){
-    return {course: 0,status: true,type: 0,'E/V': 'The room is vacant until the end of today :)',section: 0};
+  } else if (slot == 0) {
+    return {
+      course: 0,
+      status: true,
+      type: 0,
+      "E/V": "The room is vacant until the end of today :)",
+      section: 0,
+    };
   } else {
     let day = new Date().getDay();
     let data = doc.data()[day][slot];
@@ -80,15 +86,15 @@ async function whatsin(room) {
 
   if (!doc.exists) {
     return 0;
-  } else if(slot == 0){
-    return {"status":"Free Room"};
+  } else if (slot == 0) {
+    return { status: "Free Room" };
   } else {
     let day = new Date().getDay();
     let data = doc.data()[day][slot];
     let status = data["status"];
     if (status === true) {
-      return {"status":"Free Room"};
-    } 
+      return { status: "Free Room" };
+    }
     delete data.status;
     return data;
   }
@@ -112,24 +118,54 @@ async function getRooms(building) {
   let day = new Date().getDay();
   let slot = currentSlot();
   let result = [];
-  if (slot == 0){
-    if (building == 3){
+  if (slot == 0) {
+    if (building == 3) {
       let data = await roomData.get();
       result = toArray(data);
-    }else if (building == 1 || building == 2) {
+    } else if (building == 1 || building == 2) {
       let data = await roomData.where("building", "==", `${building}`).get();
       result = toArray(data);
     }
-  }else if (building == 3) {
+  } else if (building == 3) {
     let data = await roomData.where(`${day}.${slot}.status`, "==", true).get();
     result = toArray(data);
   } else if (building == 1 || building == 2) {
-    let data = await roomData.where("building", "==", `${building}`).where(`${day}.${slot}.status`, "==", true).get();
-    result = toArray(data);    
+    let data = await roomData
+      .where("building", "==", `${building}`)
+      .where(`${day}.${slot}.status`, "==", true)
+      .get();
+    result = toArray(data);
   } else {
     return 0;
   }
   return result;
 }
 
-module.exports = { getRoom, whatsin, roomTable, getRooms };
+async function initializingData() {
+  const roomData = db.collection("rooms").doc(`9`);
+  let doc = await roomData.get();
+  console.log("done");
+}
+async function updateData() {
+  let toWait;
+  let currentMinute;
+
+  while (true) {
+    currentMinute = new Date().getSeconds();
+    if (currentMinute < 30) {
+      toWait = 30 - currentMinute;
+    } else if (currentMinute >= 30) {
+      toWait = 60 - currentMinute;
+    }
+    await setTimeout(toWait * 1000);
+    console.log("in");
+  }
+}
+module.exports = {
+  getRoom,
+  whatsin,
+  roomTable,
+  getRooms,
+  updateData,
+  initializingData,
+};
