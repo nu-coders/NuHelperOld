@@ -85,7 +85,7 @@ const getAllCoursesNamesCodes = async function(){
     const name = doc.data().courseId+' - '+doc.data().courseName;
     courses.push(name);
     });
-    return courses;
+    return Array.from(new Set(courses));
 }
 const getCourseByName = async function(name){
     let courses = [];
