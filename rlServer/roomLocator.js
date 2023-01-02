@@ -67,22 +67,11 @@ function api() {
     }
   });
 
-  // // Same as get room
-  // // ok
-  // router.get("/api/whatsin", async (req, res) => {
-  //   // http://127.0.0.1:8080/api/whatsin/
-  //   let id = req.query.id;
-  //   if (id == null || id == "") {
-  //     res.status(404).json({ error: "Not a room" });
-  //   } else {
-  //     let response = await backend.whatsin(id);
-  //     if (response === 0) {
-  //       res.status(404).json({ error: "Not a room" });
-  //     } else {
-  //       res.send(response);
-  //     }
-  //   }
-  // });
+  // ok
+  router.get("/api/suglist", async ( res) => {
+    // http://127.0.0.1:8080/api/suglist/
+    res.send(backend.roomsSuggestion());
+  });
 
   app.use("/", router);
 
@@ -95,13 +84,10 @@ function api() {
   });
 }
 
-
-
-
-
 async function main() {
   
   await backend.cachingData();
   api();
+  await backend.updateData();
 }
 main();
