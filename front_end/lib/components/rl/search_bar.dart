@@ -1,9 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:front_end/components/rl/room_card.dart';
+import 'package:front_end/components/rl/search_card.dart';
+
+import '../../backend/room_locator.dart';
+
+String searchQuery = "";
 
 class SearchBar extends SearchDelegate {
-  List<String> suggestions;
+  List<dynamic> suggestions;
   Set<String> set = {};
+
   SearchBar(this.suggestions);
 
   @override
@@ -17,7 +24,6 @@ class SearchBar extends SearchDelegate {
             query = '';
           },
           icon: const Icon(Icons.clear)),
-      IconButton(onPressed: () {}, icon: const Icon(Icons.menu))
     ];
   }
 
@@ -32,13 +38,13 @@ class SearchBar extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return RoomCard(course: "course", room: query, status: "status");
-    // child: Text("This a serious bug please report\nthx, Devs"),
+    searchQuery = query;
+    return const SearchReasult();
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<String> suggestion = suggestions.where((res) {
+    List<dynamic> suggestion = suggestions.where((res) {
       final result = res.toLowerCase();
       final input = query.toLowerCase();
       return result.contains(input);
@@ -49,12 +55,80 @@ class SearchBar extends SearchDelegate {
           final sugg = suggestion[index];
           return ListTile(
             title: Text(sugg),
-            onTap: () {
-              query = sugg;
+            onTap: () async {
+              searchQuery = query = sugg;
               showResults(context);
             },
           );
         }),
         itemCount: suggestion.length);
+  }
+}
+
+class SearchReasult extends StatefulWidget {
+  const SearchReasult({super.key});
+
+  @override
+  State<SearchReasult> createState() => _SearchReasultState();
+}
+
+class _SearchReasultState extends State<SearchReasult> {
+  String query = searchQuery;
+
+  bool loading = true;
+  bool outsideSlot = false;
+  bool error = false;
+  Map<String, dynamic> json = {};
+
+  _SearchReasultState();
+  RoomLocator backend = RoomLocator();
+
+  void backendCall() async {
+    error = outsideSlot = false;
+    String response = await backend.getRoom(query);
+    print(response);
+    if (response == "404") {
+      error = true;
+    } else if (response == "405") {
+      outsideSlot = true;
+    } else {
+      json = jsonDecode(response);
+    }
+    setState(() {
+      loading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    backendCall();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return loading
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : error
+            ? const Center(
+                child: Text(
+                  "Not A Room :(",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              )
+            : outsideSlot
+                ? const Center(
+                    child: Text(
+                      "Not a working hour",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  )
+                : SearchCard(
+                    course: json['course'] == 0 ? "None" : json['course'],
+                    room: searchQuery.toString(),
+                    status: json['status'] == true ? "Vacant" : "Occupied");
   }
 }
