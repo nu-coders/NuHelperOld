@@ -77,6 +77,16 @@ const getAllCourses = async function(){
     return courses;
 }
 
+const getAllCoursesNamesCodes = async function(){
+    let courses = [];
+    const snapshot = await db.collection('courses').get();
+    snapshot.forEach((doc) => {
+    //console.log(doc.id, '=>', doc.data());
+    const name = doc.data().courseId+' - '+doc.data().courseName;
+    courses.push(name);
+    });
+    return courses;
+}
 const getCourseByName = async function(name){
     let courses = [];
     const snapshot = await db.collection('courses').where('courseName','==',name).get();
@@ -302,4 +312,4 @@ const getSavedTable = async function(userId){
     return course.data().table;
 }
 
-module.exports = {getSavedTable, saveTable, createTableFiltered,removeClashes,createTablesNoChecks, coursesUploader, getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId, createCourseOptionsList};
+module.exports = {getAllCoursesNamesCodes,getSavedTable, saveTable, createTableFiltered,removeClashes,createTablesNoChecks, coursesUploader, getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId, createCourseOptionsList};
