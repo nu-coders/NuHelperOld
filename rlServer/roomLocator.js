@@ -68,9 +68,9 @@ function api() {
   });
 
   // ok
-  router.get("/api/suglist", async ( res) => {
+  router.get("/api/suglist", async ( req, res) => {
     // http://127.0.0.1:8080/api/suglist/
-    res.send(backend.roomsSuggestion());
+    res.send(await backend.roomsSuggestion());
   });
 
   app.use("/", router);
@@ -89,5 +89,6 @@ async function main() {
   await backend.cachingData();
   api();
   await backend.updateData();
-}
+  
+} 
 main();

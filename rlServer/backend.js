@@ -129,6 +129,7 @@ async function cachingData() {
     }
   });
   console.log("Done Caching Data");
+  console.log(suggetionsList);
 }
 
 async function updateData() {
@@ -149,6 +150,7 @@ async function updateData() {
     await setTimeout(toWait);
     cachingData();
   }
+  
 }
 
 module.exports = {
