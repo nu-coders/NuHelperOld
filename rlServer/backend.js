@@ -129,7 +129,6 @@ async function cachingData() {
     }
   });
   console.log("Done Caching Data");
-  console.log(suggetionsList);
 }
 
 async function updateData() {
@@ -137,7 +136,6 @@ async function updateData() {
   let currentMinute;
 
   while (true) {
-    console.log("in");
     currentMinute = new Date().getMinutes();
     if (currentMinute < 30) {
       toWait = 30 - currentMinute;
@@ -145,8 +143,6 @@ async function updateData() {
       toWait = 60 - currentMinute;
     }
     toWait *= 60000;
-    console.log("in1");
-    console.log(toWait);
     await setTimeout(toWait);
     cachingData();
   }
