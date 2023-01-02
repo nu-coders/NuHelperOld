@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 
 const router = express.Router();
-const port = 8085;
+const port = 8080;
 
 function api() {
   router.get("/api", (req, res) => {
@@ -21,8 +21,10 @@ function api() {
       res.status(404).json({ error: "Not a room" });
     } else {
       let response = await backend.getRoom(id);
-      if (response === 0) {
+      if (response == -1) {
         res.status(404).json({ error: "Not a room" });
+      }else if (response == 0) {
+        res.status(405).json({ error: "Outsite Working Hours" });
       } else {
         res.send(response);
       }
@@ -37,9 +39,11 @@ function api() {
       res.status(404).json({ error: "Not a building" });
     } else {
       let response = await backend.getRooms(building);
-      if (response === 0) {
+      if (response === -1) {
         res.status(404).json({ error: "Not a building" });
-      } else {
+      } else if (response == 0) {
+        res.status(405).json({ error: "Outsite Working Hours" });
+      }else {
         res.send(response);
       }
     }
@@ -53,29 +57,32 @@ function api() {
       res.status(404).json({ error: "Not a room" });
     } else {
       let response = await backend.roomTable(id);
-      if (response === 0) {
+      if (response == -1) {
         res.status(404).json({ error: "Not a room" });
+      }else if (response == 0) {
+        res.status(405).json({ error: "Outsite Working Hours" });
       } else {
         res.send(response);
       }
     }
   });
 
-  // ok
-  router.get("/api/whatsin", async (req, res) => {
-    // http://127.0.0.1:8080/api/whatsin/
-    let id = req.query.id;
-    if (id == null || id == "") {
-      res.status(404).json({ error: "Not a room" });
-    } else {
-      let response = await backend.whatsin(id);
-      if (response === 0) {
-        res.status(404).json({ error: "Not a room" });
-      } else {
-        res.send(response);
-      }
-    }
-  });
+  // // Same as get room
+  // // ok
+  // router.get("/api/whatsin", async (req, res) => {
+  //   // http://127.0.0.1:8080/api/whatsin/
+  //   let id = req.query.id;
+  //   if (id == null || id == "") {
+  //     res.status(404).json({ error: "Not a room" });
+  //   } else {
+  //     let response = await backend.whatsin(id);
+  //     if (response === 0) {
+  //       res.status(404).json({ error: "Not a room" });
+  //     } else {
+  //       res.send(response);
+  //     }
+  //   }
+  // });
 
   app.use("/", router);
 
@@ -93,8 +100,8 @@ function api() {
 
 
 async function main() {
-  await backend.t1();
+  
+  await backend.cachingData();
   api();
-  backend.test();
 }
 main();

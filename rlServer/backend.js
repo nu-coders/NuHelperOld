@@ -36,136 +36,144 @@ let slots = {
   20: 24,
 };
 
+let allRooms = {};
+let b1Rooms = {};
+let b2Rooms = {};
+
 function currentSlot() {
   let currentTime = new Date();
   let hour = currentTime.getHours();
   let minute = currentTime.getMinutes();
 
-  if (!(hour in slots)) {
-    return 0;
-  } else if (minute >= 30) {
-    return slots[`${hour}30`];
+  // if (!(hour in slots)) {
+  //   return 0;
+  // } else if (minute >= 30) {
+  //   return slots[`${hour}30`];
+  // }
+  // return slots[`${hour}`];
+
+  if (hour in slots) {
+    if (minute >= 30) {
+      return slots[`${hour}30`];
+    }
+    return slots[`${hour}`];
   }
-  return slots[`${hour}`];
+  return 0;
 }
 
-function toArray(rooms) {
-  let result = [];
-  rooms.forEach((room) => {
-    result.push(room.id);
-  });
+function emptyRooms(rooms) {
+  let result = {};
+  let day = new Date().getDay();
+  let slot = currentSlot();
+  for (let room in rooms){
+    if (rooms[room][day][slot]["status"] == true) {
+      result[room] = rooms[room][day][slot];
+    }
+  }
   return result;
 }
 
 async function getRoom(room) {
-  const roomData = db.collection("rooms").doc(`${room}`);
-  let doc = await roomData.get();
-  let slot = currentSlot();
-
-  if (!doc.exists) {
-    return 0;
-  } else if (slot == 0) {
-    return {
-      course: 0,
-      status: true,
-      type: 0,
-      "E/V": "The room is vacant until the end of today :)",
-      section: 0,
-    };
-  } else {
-    let day = new Date().getDay();
-    let data = doc.data()[day][slot];
-    return data;
-  }
-}
-
-async function whatsin(room) {
-  const roomData = db.collection("rooms").doc(`${room}`);
-  let doc = await roomData.get();
-  let slot = currentSlot();
-
-  if (!doc.exists) {
-    return 0;
-  } else if (slot == 0) {
-    return { status: "Free Room" };
-  } else {
-    let day = new Date().getDay();
-    let data = doc.data()[day][slot];
-    let status = data["status"];
-    if (status === true) {
-      return { status: "Free Room" };
+  if (room in allRooms) {
+    let slot = currentSlot();
+    if (slot != 0) {
+      let day = new Date().getDay();
+      let data = allRooms[room][day][slot];
+      return data;
     }
-    delete data.status;
-    return data;
+    return 0;
   }
+  return -1;
 }
 
 async function roomTable(room) {
-  const roomData = db.collection("rooms").doc(`${room}`);
-  let doc = await roomData.get();
 
-  if (!doc.exists) {
+
+  if (room in allRooms) {
+    let slot = currentSlot();
+    if (slot != 0) {
+      let day = new Date().getDay();
+      let data = allRooms[room][day];
+      return data;
+    }
     return 0;
-  } else {
-    let day = new Date().getDay();
-    let data = doc.data()[day];
-    return data;
   }
+  return -1;
 }
 
 async function getRooms(building) {
-  const roomData = db.collection("rooms");
-  let day = new Date().getDay();
-  let slot = currentSlot();
-  let result = [];
-  if (slot == 0) {
-    if (building == 3) {
-      let data = await roomData.get();
-      result = toArray(data);
-    } else if (building == 1 || building == 2) {
-      let data = await roomData.where("building", "==", `${building}`).get();
-      result = toArray(data);
+  if (building == 3 || building == 2 || building == 1) {
+    let slot = currentSlot();
+    if (slot != 0) {
+      if (building == 3) {
+        return emptyRooms(allRooms);
+      } else if (building == 2) {
+        return emptyRooms(b2Rooms);
+      }
+      return emptyRooms(b1Rooms);
     }
-  } else if (building == 3) {
-    let data = await roomData.where(`${day}.${slot}.status`, "==", true).get();
-    result = toArray(data);
-  } else if (building == 1 || building == 2) {
-    let data = await roomData
-      .where("building", "==", `${building}`)
-      .where(`${day}.${slot}.status`, "==", true)
-      .get();
-    result = toArray(data);
-  } else {
     return 0;
   }
-  return result;
+  return -1;
+
+  // if (slot == 0) {
+  //   if (building == 3) {
+  //     let data = await roomData.get();
+  //     result = toArray(data);
+  //   } else if (building == 1 || building == 2) {
+  //     let data = await roomData.where("building", "==", `${building}`).get();
+  //     result = toArray(data);
+  //   }
+  // } else if (building == 3) {
+  //   let data = await roomData.where(`${day}.${slot}.status`, "==", true).get();
+  //   result = toArray(data);
+  // } else if (building == 1 || building == 2) {
+  //   let data = await roomData
+  //     .where("building", "==", `${building}`)
+  //     .where(`${day}.${slot}.status`, "==", true)
+  //     .get();
+  //   result = toArray(data);
+  // } else {
+  //   return 0;
+  // }
+  // return result;
 }
 
-async function initializingData() {
-  const roomData = db.collection("rooms").doc(`9`);
-  let doc = await roomData.get();
-  console.log("done");
+async function cachingData() {
+  const roomsData = await db.collection("rooms").get();
+  roomsData.forEach(async (doc) => {
+    let room = doc.data();
+    allRooms[doc.id] = room;
+    if (room.building == "1") {
+      b1Rooms[doc.id.toLowerCase()] = room;
+    } else {
+      b2Rooms[doc.id.toLowerCase()] = room;
+    }
+  });
+  console.log("Done Caching Data");
 }
+
 async function updateData() {
   let toWait;
   let currentMinute;
 
   while (true) {
-    currentMinute = new Date().getSeconds();
+    currentMinute = new Date().minute();
     if (currentMinute < 30) {
       toWait = 30 - currentMinute;
     } else if (currentMinute >= 30) {
       toWait = 60 - currentMinute;
     }
-    await setTimeout(toWait * 1000);
-    console.log("in");
+    await setTimeout(toWait * 60 * 1000);
+    cachingData();
   }
 }
 module.exports = {
   getRoom,
-  whatsin,
+  // whatsin,
   roomTable,
   getRooms,
   updateData,
-  initializingData,
+  cachingData,
 };
+// cachingData();
