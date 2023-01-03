@@ -20,9 +20,9 @@ class _TableMakerSliderState extends State<TableMakerSlider> {
         data: ThemeData(backgroundColor: Colors.transparent),
         child: Slider(
           value: atendDays,
-          max: 7,
+          max: 6,
           min: 1,
-          divisions: 6,
+          divisions: 5,
           label: 'Days: ${atendDays.toInt()}',
           onChanged: ((value) {
             setState(() {

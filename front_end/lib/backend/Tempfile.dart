@@ -1,5 +1,8 @@
 void main() async {
-  String a = "CSCI313/ECEN428 - Software Engineering";
+  List<int> a = List<int>.generate(5, (index) => index + 1);
+  print(a);
+
+  // a.f
   // print(a.);
 }
 
