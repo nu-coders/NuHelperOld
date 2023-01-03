@@ -1,0 +1,61 @@
+Room Locattor Backend Documentation
+1 - function currentSlot()
+    Parameter : None
+    Return : Return current slot depending on local time as int and if its outside working hour after 8 pm slot it returns 0. 
+    Example : Current time is 12:49 function will return 9 
+
+2 - function emptyRooms(rooms)
+    Parameter : rooms : json type
+    Return : List with empty rooms depending on the current slot.  
+    Example : Current time is 12:49 function will return list with empty rooms.
+
+3 - function getRoom(room)
+    Parameter : room : String type
+    Return : Return data about inputed room. if room does not exist it returns -1 and if we are outside working hours it returns 0 
+    Example : getRoom('233') =>  {
+        "status": false,
+        "course": "BSAD301",
+        "type": "Lecture",
+        "section": "05",
+        "E/V": "The room is occupied until 17:30 PM"
+      }
+
+4 - function roomTable(rooms)
+    Parameter : room : String type
+    Return : Return all slots data related inputed room in the current day. if room does not exist it returns -1 and if we are outside working hours it returns 0 
+    Example :getRoom('233') => "1": {
+        "status": false,
+        "course": "FINC403",
+        "type": "Lecture",
+        "section": "01",
+        "E/V": "The room is occupied until 18:30 PM"
+      },
+      "2": {...
+
+5 - function roomsSuggestion()
+    Parameter : None
+    Return : Return list with rooms name
+    Example : roomsSuggestion() => ['f36', '9', '233', etc...]
+
+6 - function cachingData()
+    Parameter : None
+    Return : Store local copy of used data to minimize usage of database and it is void function
+
+7 - function getRooms(building)
+    Parameter : building int type
+    Return : Return list with rooms empty rooms in specifec building if building does not exist it returns -1 and if we are outside working hours it returns 0 
+    Example : getRooms(3) => ['f36':{  "status": false,
+        "course": "FINC403",
+        "type": "Lecture",
+        "section": "01",
+        "E/V": "The room is occupied until 18:30 PM"},
+         '9':{"status": false,
+        "course": "ACCT202",
+        "type": "Lecture",
+        "section": "01",
+        "E/V": "The room is occupied until 18:30 PM"
+      }, etc...]
+    
+8 - function updateData()
+    Parameter : None
+    Return : call cachingData function every 30 min and Return None

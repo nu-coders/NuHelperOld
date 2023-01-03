@@ -1,5 +1,5 @@
 
-const courses = require('./json/courses_.json');
+const courses = require('./json/courses.json');
 const rooms = require('./json/rooms.json');
 const { initializeApp, cert } = require('firebase-admin/app');
 const { getFirestore} = require('firebase-admin/firestore');
@@ -27,6 +27,6 @@ async function upload_rooms(){
 }
 
 
-// upload_courses();
-// upload_rooms();
+upload_courses();
+upload_rooms();
 console.log("done uploading");

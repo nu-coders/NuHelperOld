@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "91778432471",
+    "project_id": "nuhelper-5a2c6",
+    "storage_bucket": "nuhelper-5a2c6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91778432471:android:f42499364aa0af631b9f92",
+        "android_client_info": {
+          "package_name": "com.example.front_end"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "91778432471-6ns4i429itng1f6t0fqjpcgmcn82jlaj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKwxLgnZtxBCw5nzvnS-7dLLobqa_iLvM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "91778432471-6ns4i429itng1f6t0fqjpcgmcn82jlaj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
