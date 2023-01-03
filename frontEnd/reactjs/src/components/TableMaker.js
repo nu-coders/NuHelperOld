@@ -36,9 +36,16 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Slider } from '@mui/material';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
+import FormGroup from '@mui/material/FormGroup';
 import RadioGroup from '@mui/material/RadioGroup';
 import Radio from '@mui/material/Radio';
+import Checkbox from '@mui/material/Checkbox';
 import logo from '../assets/images/logo.png';
+import { query, collection, getDocs, where } from "firebase/firestore";
+import { auth, db, logout } from "../firestore/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
+import Switch from '@mui/material/Switch';
 
 const mdTheme = createTheme();
 
@@ -83,9 +90,31 @@ function DashboardContent() {
       sectionValueNew[addedCourses.indexOf(course)] = event.target.value;
       setSections(sectionValueNew);
     };
-  
+    const [user, loading, error] = useAuthState(auth);
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [userUid, setUserUid] = useState("");
+    const navigate = useNavigate();
+    const fetchUserName = async () => {
+      try {
+        const q = query(collection(db, "users"), where("uid", "==", user?.uid));
+        const doc = await getDocs(q);
+        const data = doc.docs[0].data();
+        setName(data.name);
+        setEmail(data.email);
+        setUserUid(user.uid);
+      } catch (err) {
+        console.error(err);
+        alert("An error occured while fetching user data");
+      }
+    };
+    useEffect(() => {
+      if (loading) return;
+      if (!user) return navigate("/");
+      fetchUserName();
+    }, [user, loading]);
     
-    const [loading, setLoading] = useState(false);
+    const [loading2, setLoading] = useState(false);
 
     const [data, setData] = useState([]);
     useEffect(() => {
@@ -149,14 +178,40 @@ function DashboardContent() {
    const getData = async () => {
 
     setLoading(true);
+    console.log("using filters " + useFilters);
     try{
       let response;
-      
+      let daysToGo =[];
+      if(state.sunday){
+        daysToGo.push("Sunday");
+      } 
+      if(state.monday){
+        daysToGo.push("Monday");
+      }
+      if(state.tuesday){
+        daysToGo.push("Tuesday");
+      }
+      if(state.wednesday){
+        daysToGo.push("Wednesday");
+      }
+      if(state.thursday){
+        daysToGo.push("Thursday");
+      }
+      if(state.friday){
+        daysToGo.push("Friday");
+      }
+      if(state.saturday){
+        daysToGo.push("Saturday");
+      }
+
       response =  await axios.post('//localhost:8080/createTableNoClash', 
       {
-        id: addedCourses,
-        useFilters: useFilters,
-        filters: filters,
+        "id": addedCourses,
+        "useFilters": useFilters,
+        "filters": {
+          "noDays" : numberOfDays,
+          "DaysToGo" : daysToGo,
+        },
         }
       );
       console.log('data from server' + response.data);
@@ -172,9 +227,44 @@ function DashboardContent() {
   
   const saveTableToUser = async (table) => {
     setLoading(true);
-    
+    try {
+      let response;
+      response = await axios.post('//localhost:8080/saveTable', {
+        userId : userUid,
+        userEmail : email,
+        table: table,
+      });
+      console.log('data from server' + response);
+      window.alert('Table saved successfully');
+      navigate('/home');
+    } catch(err) {
+      console.log('error'+err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-
+  const [state, setState] = React.useState({
+    sunday: true,
+    monday: true,
+    tuesday: true,
+    wednesday: true,
+    thursday: true,
+    friday: false,
+    saturday: false,
+  });
+  const handleChangeCheckbox = (event) => {
+    console.log(event.target.name + ' ' + event.target.checked)
+    setState({ ...state, [event.target.name]: event.target.checked });
+  };
+  const { sunday, monday, tuesday, wednesday, thursday, friday, saturday } = state;
+  
+  const [switchState, setSwitchState] = React.useState(false);
+  const handleSwitch = (event) => {
+    setSwitchState(event.target.checked);
+    setUseFilters(event.target.checked);
+    console.log(useFilters);
+  };
    useEffect(() => {
  
   },[tables])
@@ -243,9 +333,10 @@ function DashboardContent() {
                                           <Typography> Instructor :{ course.instructors[0].fullName}</Typography>
                                         </Paper>
                                       ))}
-                                      <Button >Choose Table</Button>
+                                      <Button onClick={()=>{saveTableToUser(table)}}>Choose Table</Button>
                                     </Paper>
                                   ))}
+                                  {tables && tables.length === 0 && <Typography variant='h3' > No tables found </Typography>}
                                                                      
                                 </List>
                     </Paper>
@@ -275,6 +366,17 @@ function DashboardContent() {
                   </List>
                 </Paper>
                 <Paper sx={{ m:1, p: 2, display: 'flex', flexDirection: 'column', backgroundColor: `#caf0f8` }}>
+                  
+                  
+                  <FormControl component="fieldset" variant="standard">
+                    <FormControlLabel
+                      control={
+                        <Switch checked={switchState} onChange={handleSwitch} inputProps={{ 'aria-label': 'controlled',  }} color="secondary" />
+                      }
+                      label='Filters'
+                    />
+
+                  
                     <Typography>Number of days to go </Typography>
                     <Slider
                         aria-label="Temperature"
@@ -285,20 +387,33 @@ function DashboardContent() {
                         min={1}
                         max={6}
                     />
-                    <FormControl>
-                        <FormLabel id="demo-radio-buttons-group-label">Days To go</FormLabel>
-                            <RadioGroup
-                                aria-labelledby="demo-radio-buttons-group-label"
-                                name="radio-buttons-group"
-                            >
-                                <FormControlLabel value="Sunday" control={<Radio />} label="Sunday" />
-                                <FormControlLabel value="Monday" control={<Radio />} label="Monday" />
-                                <FormControlLabel value="Tuesday" control={<Radio />} label="Tuesday" />
-                                <FormControlLabel value="Wednesday" control={<Radio />} label="Wednesday" />
-                                <FormControlLabel value="Thurusday" control={<Radio />} label="Thurusday" />
+                            <FormGroup>
+
+                              <FormControlLabel control={
+                                <Checkbox checked={sunday} onChange={handleChangeCheckbox} name="sunday" />
+                                } label="Sunday" />
+                              
+                              <FormControlLabel control={
+                                <Checkbox checked={monday} onChange={handleChangeCheckbox} name="monday" />
+                                } label="Monday" />
+                              
+                              <FormControlLabel control={
+                                <Checkbox checked={tuesday} onChange={handleChangeCheckbox} name="tuesday" />
+                                } label="Tuesday" />
+                              
+                              <FormControlLabel control={
+                                <Checkbox checked={wednesday} onChange={handleChangeCheckbox} name="wednesday" />
+                                } label="Wednesday" />
+                              
+                              <FormControlLabel control={
+                                <Checkbox checked={thursday} onChange={handleChangeCheckbox} name="thursday" />
+                                } label="Thursday" />
+
+                         
+                          
+                            </FormGroup>
+                          
                                 
-                                
-                            </RadioGroup>
                     </FormControl>
                 </Paper>
                 <Paper sx={{ m:1, p: 2, display: 'flex', flexDirection: 'column', backgroundColor: `#caf0f8` }}>
