@@ -46,8 +46,6 @@ import { auth, db, logout } from "../firestore/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import Switch from '@mui/material/Switch';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
 const mdTheme = createTheme();
 
@@ -124,16 +122,16 @@ function DashboardContent() {
           setLoading(true);
           try{
             let response;
-            const cachedData = localStorage.getItem('courseNamesNu');
+            const cachedData = localStorage.getItem('rooms');
             if(cachedData) {
               response = {data: JSON.parse(cachedData)};
               console.log('data from cache');
             } else {
               response = await axios.get(
-                '//localhost:8080/getAllCourseNames',
+                '//localhost:8081/api/suglist',
               );
-              localStorage.setItem('courseNamesNu', JSON.stringify(response.data));
-              console.log('data from server');
+              localStorage.setItem('courses', JSON.stringify(response.data));
+              console.log('data from server' + response.data);
             }
             setData(response.data);
           } catch{
@@ -146,6 +144,35 @@ function DashboardContent() {
         fetchData();
     }, []);
 
+    const [rooms, setRooms] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+          setLoading(true);
+          try{
+            let response;
+            const cachedData = localStorage.getItem('roomNames');
+            if(cachedData) {
+              response = {data: JSON.parse(cachedData)};
+              console.log('data from cache');
+            } else {
+              response = await axios.get(
+                '//localhost:8081/api/getRooms/?building=3',
+              );
+              localStorage.setItem('roomNames', JSON.stringify(response.data));
+              console.log('data from server' + response.data);
+            }
+            setRooms(response.data);
+          } catch{
+            console.log('error');
+          }finally{
+            setLoading(false);
+          }
+          
+        };
+        fetchData();
+    }, []);
+
+
     const fullCoursesList = data ? data: null;
     const coursesList = [...new Set(fullCoursesList)];
     const [selectedCourse, setSelectedCourse] = React.useState();
@@ -153,70 +180,91 @@ function DashboardContent() {
     const toggleDrawer = () => {
         setOpen(!open);
     };
-
-    const [posts, setPosts] = useState([]);
-    const getPosts = async() => {
+    const addCourse = async() => {
       let course = selectedCourse.split(" ")[0];
-      let selectedCoursesTemp = [...course];
+      let selectedCoursesTemp = [...addedCourses, course];
       let uniqeSelectedCoursesTemp = [...new Set(selectedCoursesTemp)];
       setAddedCourses(uniqeSelectedCoursesTemp );
-      let response ;
-      response =  await axios.post('//localhost:8082/getRoomPostsByRoomId', 
-      {
-        "roomId": course.replace('/',''),
-        }
-      );
-      console.log('data from server %j' , response.data);
-      setPosts(response.data);
     }
+    const removeCourse = (course)=>{
+    console.log('removed ' +course) 
+      let sectionsNew = [...section];
+      sectionsNew.splice(addedCourses.indexOf(course),1);
+      setSections(sectionsNew);
+      setAddedCourses(addedCourses.filter(code => code !== course));
 
+  }
     const [isClicked, setIsClicked] = React.useState(false);
     useEffect(() => {
       isClicked && setIsClicked(false);
    },[isClicked]);
 
-  const onUpvote = async (post) => {
-    setIsClicked(true);
-    let response ;
-    response =  await axios.post('//localhost:8082/upvotePost',
-    {
-      "postId": post.postId,
-      "userId": userUid,
-      "roomId": post.roomId,
-      }
-    );
-    console.log('data from server ' + response.data);
-    setPosts(response.data);
-  }
+   const [tables, setTables]= React.useState([]);
+   const [useFilters, setUseFilters] = React.useState(false);
+   const [filters, setFilters] = React.useState({});
 
-  const onDownvote = async (post) => {
-    setIsClicked(true);
-    let response ;
-    response =  await axios.post('//localhost:8082/downvotePost',
-    {
-      "postId": post.postId,
-      "userId": userUid,
-      "roomId": post.roomId,
-      }
-    );
-    console.log('data from server ' + response.data);
-    setPosts(response.data);
-  }
 
-  const classes = {
-    root: {
-      display: 'flex',
-      alignItems: 'center',
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: 'bold',
-      marginRight: '8px',
-    },
-    body: {
-      fontSize: 16,
-    },
+   const getRoom = async () => {
+    console.log("in get room");
+    
+    try{
+        console.log("selected course is "+selectedCourse);
+        let response;
+      response =  await axios.get(`//localhost:8081/getRoom/?id=${selectedCourse}`);
+      console.log('data from server' + response.data);
+      setTables(response.data);
+    } catch{
+      console.log('error');
+    }finally{
+      setLoading(false);
+    }
+
+    
   };
+  
+  const saveTableToUser = async (table) => {
+    setLoading(true);
+    try {
+      let response;
+      response = await axios.post('//localhost:8080/saveTable', {
+        userId : userUid,
+        userEmail : email,
+        table: table,
+      });
+      console.log('data from server' + response);
+      window.alert('Table saved successfully');
+      navigate('/home');
+    } catch(err) {
+      console.log('error'+err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const [state, setState] = React.useState({
+    sunday: true,
+    monday: true,
+    tuesday: true,
+    wednesday: true,
+    thursday: true,
+    friday: false,
+    saturday: false,
+  });
+  const handleChangeCheckbox = (event) => {
+    console.log(event.target.name + ' ' + event.target.checked)
+    setState({ ...state, [event.target.name]: event.target.checked });
+  };
+  const { sunday, monday, tuesday, wednesday, thursday, friday, saturday } = state;
+  
+  const [switchState, setSwitchState] = React.useState(false);
+  const handleSwitch = (event) => {
+    setSwitchState(event.target.checked);
+    setUseFilters(event.target.checked);
+    console.log(useFilters);
+  };
+   useEffect(() => {
+ 
+  },[rooms])
   return (    
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -259,7 +307,7 @@ function DashboardContent() {
                                 <Autocomplete disablePortal id="combo-box-demo" options={coursesList} inputValue = {selectedCourse} onChange={(event, newValue) => { setSelectedCourse(newValue); }}  renderInput={(params) => <TextField {...params}   label="Search Courses" />} />
                             </Grid>
                             <Grid item xs={3} md={4} lg={3}>
-                                <Button sx={{backgroundColor: `#0077b6`}} variant="contained" onClick={() => {getPosts();}} >Posts</Button>
+                                <Button sx={{backgroundColor: `#0077b6`}} variant="contained" onClick={() => {addCourse();}} >Add</Button>
                             </Grid>
                     </Grid>
                 </Paper>
@@ -269,30 +317,101 @@ function DashboardContent() {
                     <Paper elevation={0} style={{minHeight: 400,maxHeight: 600, overflow: 'auto',backgroundColor: `#0077b6`}}>
 
                                 <List>
-                                  {posts&&posts.map((post) => (
-                                    <Paper key={post.id} button>
-                                      <div className={classes.root}>
-                                      <div className={classes.title}>{1}</div>
-                                      <div className={classes.body}>{2}</div>
-                                      <IconButton onClick={onUpvote}>
-                                        <ThumbUpIcon />
-                                      </IconButton>
-                                      <IconButton onClick={onDownvote}>
-                                        <ThumbDownIcon />
-                                      </IconButton>
-                                    </div>
-                                    </Paper>
-                                  ))}
-                                  {posts&&posts.length===0&&<ListItem key={1} button>
-                                      <ListItemText primary="No Posts Found" />
-                                      </ListItem>
-                                      }                               
+                                {Object.keys(rooms).forEach((room, index)=>{
+                                        console.log("hi")
+                                        return(
+                                        <Paper key  ={index} sx={{ p:2, m: 2,backgroundColor: `#caf7b8`}}>
+                                          <Typography> {  " jjj" } </Typography>
+                                          {/* <Typography> Section: {course.section } </Typography>
+                                          <Typography> {course.courseType + " " + course.section} </Typography>
+                                          <Typography> {course.schedule[0].dayDesc + " " + course.schedule[0].startTime + " - " + course.schedule[0].endTime} </Typography>
+                                          <Typography> Instructor :{ course.instructors[0].fullName}</Typography> */}
+                                        </Paper>)
+                                })}
+                                  {/* {tables && tables.length === 0 && <Typography variant='h3' align="center" > No tables found </Typography>} */}
+                                                                     
                                 </List>
                     </Paper>
                 </Paper>
               </Grid>
               {/* Recent Deposits */}
+              <Grid item  xs={12} md={4} lg={3} sx={{flexDirection:'row'}}>
+                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', minHeight:350 ,backgroundColor: `#caf0f8` }}>
+                  <List>
+                    <Typography variant="h6"  align="center">Added Courses</Typography>
+                    <Divider/>
+                    {addedCourses && addedCourses.map((course) => (
+                        <ListItem key={course}>
+                            <ListItemText primary={course} />
+                            <ListItemSecondaryAction>
+                                <IconButton edge="end" aria-label="delete" onClick={() => {removeCourse(course);}}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </ListItemSecondaryAction>
+                        </ListItem>
+                    ))}
+
+      
+      
+      
+                  
+                  </List>
+                </Paper>
+                <Paper sx={{ m:1, p: 2, display: 'flex', flexDirection: 'column', backgroundColor: `#caf0f8` }}>
+                  
+                  
+                  <FormControl component="fieldset" variant="standard">
+                    <FormControlLabel
+                      control={
+                        <Switch checked={switchState} onChange={handleSwitch} inputProps={{ 'aria-label': 'controlled',  }} color="secondary" />
+                      }
+                      label='Filters'
+                    />
+
+                  
+                    <Typography  align="center">Number of days to go </Typography>
+                    <Slider
+                        aria-label="Temperature"
+                        defaultValue={5}
+                        valueLabelDisplay="auto"
+                        step={1}
+                        marks={marks}
+                        min={1}
+                        max={6}
+                    />
+                            <FormGroup>
+
+                              <FormControlLabel control={
+                                <Checkbox checked={sunday} onChange={handleChangeCheckbox} name="sunday" />
+                                } label="Sunday" />
+                              
+                              <FormControlLabel control={
+                                <Checkbox checked={monday} onChange={handleChangeCheckbox} name="monday" />
+                                } label="Monday" />
+                              
+                              <FormControlLabel control={
+                                <Checkbox checked={tuesday} onChange={handleChangeCheckbox} name="tuesday" />
+                                } label="Tuesday" />
+                              
+                              <FormControlLabel control={
+                                <Checkbox checked={wednesday} onChange={handleChangeCheckbox} name="wednesday" />
+                                } label="Wednesday" />
+                              
+                              <FormControlLabel control={
+                                <Checkbox checked={thursday} onChange={handleChangeCheckbox} name="thursday" />
+                                } label="Thursday" />
+
+                         
                           
+                            </FormGroup>
+                          
+                                
+                    </FormControl>
+                </Paper>
+                <Paper sx={{ m:1, p: 2, display: 'flex', flexDirection: 'column', backgroundColor: `#caf0f8` }}>
+                  <Button sx={{backgroundColor: `#0077b6`}} variant="contained" onClick={() => {getRoom();}}  >Generate Tables</Button>
+                </Paper>
+              </Grid>              
             </Grid>
             <Copyright sx={{ pt: 4 }} />
           </Container>
@@ -302,6 +421,6 @@ function DashboardContent() {
   );
 }
 
-export default function NuTips() {
+export default function RoomLocator() {
   return <DashboardContent />;
 }

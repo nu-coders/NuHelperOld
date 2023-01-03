@@ -3,7 +3,7 @@ const cors = require('cors')
 
 const {getAllRooms, getRoomById, getRoomByCourseId,getRoomPostsByRoomId,addPost, upvote, downvote,createAllRooms} = require('./functions.js');
 
-const PORT = process.env.PORT || 8085;
+const PORT = process.env.PORT || 8082;
 
 const app = express();
 app.use(express.json());

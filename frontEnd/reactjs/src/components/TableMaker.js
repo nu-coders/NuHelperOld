@@ -122,7 +122,7 @@ function DashboardContent() {
           setLoading(true);
           try{
             let response;
-            const cachedData = localStorage.getItem('courses');
+            const cachedData = localStorage.getItem('courseNames');
             if(cachedData) {
               response = {data: JSON.parse(cachedData)};
               console.log('data from cache');
@@ -130,7 +130,7 @@ function DashboardContent() {
               response = await axios.get(
                 '//localhost:8080/getAllCourseNames',
               );
-              localStorage.setItem('courses', JSON.stringify(response.data));
+              localStorage.setItem('courseNames', JSON.stringify(response.data));
               console.log('data from server');
             }
             setData(response.data);

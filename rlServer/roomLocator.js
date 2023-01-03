@@ -1,12 +1,12 @@
 const express = require("express");
 
 const backend = require("./backend.js");
-
+const cors = require("cors")
 const app = express();
 app.use(express.json());
-
+app.use(cors());
 const router = express.Router();
-const port = 8080;
+const port = 8081;
 
 function api() {
   router.get("/api", (req, res) => {
@@ -80,7 +80,7 @@ function api() {
   });
 
   app.listen(port, () => {
-    console.log("runing server");
+    console.log("runing server on " +port);
   });
 }
 

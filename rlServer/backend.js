@@ -116,6 +116,23 @@ async function getRooms(building) {
   return -1;
 }
 
+async function getRooms2(building) {
+  if (building == 3 || building == 2 || building == 1) {
+    let slot = currentSlot();
+    if (slot != 0) {
+      if (building == 3) {
+        e
+        return emptyRooms(allRooms);
+      } else if (building == 2) {
+        return emptyRooms(b2Rooms);
+      }
+      return emptyRooms(b1Rooms);
+    }
+    return 0;
+  }
+  return -1;
+}
+
 async function cachingData() {
   const roomsData = await db.collection("rooms").get();
   roomsData.forEach(async (doc) => {

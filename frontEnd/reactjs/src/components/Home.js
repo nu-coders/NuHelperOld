@@ -142,9 +142,9 @@ function DashboardContent() {
                   }}
                 >
                   {/* <Chart /> */}
-                  <Paper alignItems="center" justify="center">
-                  <Typography variant="h3" align="center"> Your Saved Table </Typography>
-                                      {table.map((course, index)=>(
+                  <Paper alignItems="center" justify="center" sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                  <Typography variant="h4" align="center"> Your Saved Table </Typography>
+                                      {table && table.map((course, index)=>(
                                         <Paper key  ={course.id}sx={{ p:2, m: 2,backgroundColor: `#caf7b8`}}>
                                           <Typography> {course.courseId + " " + course.courseName} </Typography>
                                           <Typography> Section: {course.section } </Typography>
@@ -153,6 +153,7 @@ function DashboardContent() {
                                           <Typography> Instructor :{ course.instructors[0].fullName}</Typography>
                                         </Paper>
                                       ))}
+                                  {!table  && <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}><Typography variant='h5' align="center" > You Didn't Save a Table yet </Typography></Paper>}
                   </Paper>
                 </Paper>
               </Grid>
