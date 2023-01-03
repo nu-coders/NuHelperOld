@@ -7,11 +7,11 @@ import '../../backend/room_locator.dart';
 
 String searchQuery = "";
 
-class SearchBar extends SearchDelegate {
+class SearchBarRM extends SearchDelegate {
   List<dynamic> suggestions;
   Set<String> set = {};
 
-  SearchBar(this.suggestions);
+  SearchBarRM(this.suggestions);
 
   @override
   List<Widget>? buildActions(BuildContext context) {

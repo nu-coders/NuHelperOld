@@ -47,7 +47,6 @@ class RoomLocatorPageState extends State<RoomLocatorPage> {
 
   @override
   void initState() {
-    print("loaded");
     backendCall();
     super.initState();
   }
@@ -69,7 +68,7 @@ class RoomLocatorPageState extends State<RoomLocatorPage> {
                   onPressed: () {
                     showSearch(
                       context: context,
-                      delegate: SearchBar(variables.roomsSuggestions),
+                      delegate: SearchBarRM(variables.roomsSuggestions),
                     );
                   },
                 ),

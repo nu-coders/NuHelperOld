@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../../backend/shared_variables.dart';
 
 class SearchBarTM extends SearchDelegate {
-  List<String> suggestions;
+  List<dynamic> suggestions;
   final SharedVariables variables = Get.put(SharedVariables());
 
   SearchBarTM(this.suggestions);
@@ -42,13 +42,15 @@ class SearchBarTM extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     return const Center(
-      child: Text("This a serious bug please report\nthx, Devs"),
-    );
+        // child: Text("This a serious bug please report\nthx, Devs",
+        child: Text(
+            "Click on the subject while it's on suggestion\nDon't search for it :)",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)));
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<String> suggestion = suggestions.where((res) {
+    List<dynamic> suggestion = suggestions.where((res) {
       final result = res.toLowerCase();
       final input = query.toLowerCase();
       return result.contains(input);
@@ -60,9 +62,9 @@ class SearchBarTM extends SearchDelegate {
           return ListTile(
             title: Text(course),
             onTap: () {
-              query = course;
+              query = course.split(" -")[0];
               String response = "Already in your cart";
-              if (!variables.coursesCart.contains(course)) {
+              if (!variables.coursesCart.contains(query)) {
                 variables.coursesCart.add(query);
                 response = "Added to your cart";
               }

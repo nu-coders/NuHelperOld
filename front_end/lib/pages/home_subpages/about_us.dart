@@ -79,25 +79,7 @@ class _AboutUsPageState extends State<AboutUsPage> {
               }
             },
           ),
-          AboutUsButton(
-              text: "toast",
-              icon: Icons.breakfast_dining,
-              pressFunction: () {
-                print(variables.attendDays);
-              }
-              // showDialog(
-              //     context: context,
-              //     builder: (BuildContext context) => CoursesCart())
-              // {
-              // ScaffoldMessenger.of(context).showSnackBar(
-              //   SnackBar(
-              //     content: Text("Sending Message"),
-              //   ),
-              // );
-              // },
-
-              ),
-          // false
+          
           FirebaseAuth.instance.currentUser?.uid == null
               ? AboutUsButton(
                   text: "Login",

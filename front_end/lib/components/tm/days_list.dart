@@ -13,7 +13,7 @@ class DaysList extends StatefulWidget {
 class _DaysListState extends State<DaysList> {
   final SharedVariables variables = Get.put(SharedVariables());
 
-  Set<int> days = {};
+  Set<String> days = {};
 
   List<String> daysName = [
     "Sunday",
@@ -43,15 +43,14 @@ class _DaysListState extends State<DaysList> {
                   setState(() {
                     if (value != null) {
                       temp[index] = value;
-                      if (days.contains(index) && value == false) {
-                        days.remove(index);
+                      if (days.contains(daysName[index]) && value == false) {
+                        days.remove(daysName[index]);
                       } else {
-                        days.add(index);
+                        days.add(daysName[index]);
                       }
                     }
                   });
                   variables.updateSelectedDays(days);
-                  print(days.length);
                 },
               ),
               Text(daysName[index]),

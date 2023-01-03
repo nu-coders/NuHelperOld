@@ -1,11 +1,6 @@
 void main() async {
-  // DateTime time = DateTime.now();
-  // print(time.minute);
-  // test();
-  // test();
-  bool? a;
-  if (a==null)
-  print("yes");
+  String a = "CSCI313/ECEN428 - Software Engineering";
+  // print(a.);
 }
 
 void test() async {
