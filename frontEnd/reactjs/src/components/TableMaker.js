@@ -42,7 +42,36 @@ import logo from '../assets/images/logo.png';
 
 const mdTheme = createTheme();
 
-
+const marks = [
+  {
+      value: 0,
+      label: '0',
+  },
+  {
+      value: 1,
+      label: '1',
+  },
+  {
+      value: 2,
+      label: '2',
+  },
+  {
+      value: 3,
+      label: '3',
+  },
+  {
+      value: 4,
+      label: '4',
+  },
+  {
+      value: 5,
+      label: '5',
+  },
+  {
+      value: 6,
+      label: '6',
+  },    
+]
 
 function DashboardContent() {
     const [open, setOpen] = React.useState(true);
@@ -55,15 +84,7 @@ function DashboardContent() {
       setSections(sectionValueNew);
     };
   
-    const addDataIntoCache = (cacheName, url, response) => {
-      if('caches' in window) {
-        caches.open(cacheName)
-        .then(cache => {
-          cache.put(url, response);
-          alert('Data saved in cache');
-        })
-      }
-    }
+    
     const [loading, setLoading] = useState(false);
 
     const [data, setData] = useState([]);
@@ -119,9 +140,11 @@ function DashboardContent() {
     useEffect(() => {
       isClicked && setIsClicked(false);
    },[isClicked]);
-   //const {tables} = useFetch("http://localhost:8080/api/v1/getcourses", {depends : [isClicked]});
 
    const [tables, setTables]= React.useState([]);
+   const [useFilters, setUseFilters] = React.useState(false);
+   const [filters, setFilters] = React.useState({});
+
 
    const getData = async () => {
 
@@ -132,8 +155,8 @@ function DashboardContent() {
       response =  await axios.post('//localhost:8080/createTableNoClash', 
       {
         id: addedCourses,
-        useFilters: false,
-        filters: null,
+        useFilters: useFilters,
+        filters: filters,
         }
       );
       console.log('data from server' + response.data);
@@ -146,60 +169,12 @@ function DashboardContent() {
 
     
   };
-  const courseType = (type) =>{
-    if(type===0){
-        return "Lecture"
-    }else if (type===1){
-        return "Lab"
-    }else {
-        return "Tutorial"
-    }
-}
-const courseSubSection = (section) =>{
-    if(section===0){
-        return " "
-    }else if (section===1){
-        return "a"
-    }else {
-        return "b"
-    }
-}
+  
+  const saveTableToUser = async (table) => {
+    setLoading(true);
+    
 
-const courseDay = (day) =>{
-    const days = ["Saturday","Sunday", "Monday","Tuesday","Wednesday","Thursday", "Friday"];
-    return days[day];
-}
 
-const marks = [
-    {
-        value: 0,
-        label: '0',
-    },
-    {
-        value: 1,
-        label: '1',
-    },
-    {
-        value: 2,
-        label: '2',
-    },
-    {
-        value: 3,
-        label: '3',
-    },
-    {
-        value: 4,
-        label: '4',
-    },
-    {
-        value: 5,
-        label: '5',
-    },
-    {
-        value: 6,
-        label: '6',
-    },    
-]
    useEffect(() => {
  
   },[tables])

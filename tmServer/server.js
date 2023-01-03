@@ -79,7 +79,7 @@ app.post('/createTableNoClash', async(req, res) => {
     }
 })
 
-app.get('/saveTable', async(req, res) => {
+app.post('/saveTable', async(req, res) => {
     console.log("Req body is %j" , req.body);
     try {
         res.send(await saveTable(req.body.userId,req.body.table));
