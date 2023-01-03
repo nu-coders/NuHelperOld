@@ -1,13 +1,27 @@
 const express = require('express');
-const {getSavedTable,saveTable, createTableFiltered,removeClashes,createTablesNoChecks, coursesUploader, getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId, createCourseOptionsList} = require('./index.js');
+const {getSavedTable,saveTable, getAllCoursesNamesCodes, createTableFiltered,removeClashes,createTablesNoChecks, coursesUploader, getAllCourses, getCourseByCourseId, getCourseById, getCourseByName, getListCoursesByCourseId, createCourseOptionsList} = require('./index.js');
+const cors = require('cors')
 
 const PORT = process.env.PORT || 8080;
 
 const app = express();
 app.use(express.json());
 
+
+
+app.use(cors())
 app.get('/listAllCourses', async(req, res) => {
     res.send(await getAllCourses());
+})
+
+app.get('/getAllCourseNames', async(req, res) => {
+    try{
+        res.send(await getAllCoursesNamesCodes());
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+    
 })
 
 app.get('/uploadAll', async(req, res) => {
@@ -18,6 +32,7 @@ app.get('/getCourseById', async(req, res) => {
     console.log("Req body is %j" , req.body);
     res.send(await getCourseByCourseId(req.query.id));
 })
+
 
 app.get('/getListCoursesByCourseId', async(req, res) => {
     console.log("Req body is %j" , req.body);
@@ -41,7 +56,7 @@ app.get('/createTable', async(req, res) => {
     }
 })
 
-app.get('/createTableNoClash', async(req, res) => {
+app.post('/createTableNoClash', async(req, res) => {
     console.log("Req body is %j" , req.body);
     if(req.body.useFilters == false){
         try {   
@@ -64,7 +79,7 @@ app.get('/createTableNoClash', async(req, res) => {
     }
 })
 
-app.get('/saveTable', async(req, res) => {
+app.post('/saveTable', async(req, res) => {
     console.log("Req body is %j" , req.body);
     try {
         res.send(await saveTable(req.body.userId,req.body.table));

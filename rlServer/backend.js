@@ -52,6 +52,7 @@ function currentSlot() {
     }
     return slots[`${hour}`];
   }
+
   return 0;
 }
 
