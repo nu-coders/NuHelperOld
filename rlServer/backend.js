@@ -52,7 +52,7 @@ function currentSlot() {
     }
     return slots[`${hour}`];
   }
-  return 4;
+  return 0;
 }
 
 function emptyRooms(rooms) {
