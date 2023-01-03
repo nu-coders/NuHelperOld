@@ -52,7 +52,7 @@ function currentSlot() {
     }
     return slots[`${hour}`];
   }
-  return 0;
+  return 4;
 }
 
 function emptyRooms(rooms) {
@@ -120,6 +120,7 @@ async function cachingData() {
   roomsData.forEach(async (doc) => {
     let room = doc.data();
     let id = doc.id.toLowerCase();
+
     suggetionsList.push(id);
     allRooms[id] = room;
     if (room.building == "1") {

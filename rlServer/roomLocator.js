@@ -23,7 +23,7 @@ function api() {
       let response = await backend.getRoom(id);
       if (response == -1) {
         res.status(404).json({ error: "Not a room" });
-      }else if (response == 0) {
+      } else if (response == 0) {
         res.status(405).json({ error: "Outsite Working Hours" });
       } else {
         res.send(response);
@@ -43,7 +43,7 @@ function api() {
         res.status(404).json({ error: "Not a building" });
       } else if (response == 0) {
         res.status(405).json({ error: "Outsite Working Hours" });
-      }else {
+      } else {
         res.send(response);
       }
     }
@@ -59,7 +59,7 @@ function api() {
       let response = await backend.roomTable(id);
       if (response == -1) {
         res.status(404).json({ error: "Not a room" });
-      }else if (response == 0) {
+      } else if (response == 0) {
         res.status(405).json({ error: "Outsite Working Hours" });
       } else {
         res.send(response);
@@ -68,7 +68,7 @@ function api() {
   });
 
   // ok
-  router.get("/api/suglist", async ( req, res) => {
+  router.get("/api/suglist", async (req, res) => {
     // http://127.0.0.1:8080/api/suglist/
     res.send(await backend.roomsSuggestion());
   });
@@ -85,10 +85,8 @@ function api() {
 }
 
 async function main() {
-  
   await backend.cachingData();
   api();
   await backend.updateData();
-  
-} 
+}
 main();
