@@ -38,6 +38,7 @@ function DashboardContent() {
   };
   const [user, loading, error] = useAuthState(auth);
   const [name, setName] = useState("");
+  const [table, setTable] = useState([]);
   const navigate = useNavigate();
   const fetchUserName = async () => {
     try {
@@ -45,6 +46,7 @@ function DashboardContent() {
       const doc = await getDocs(q);
       const data = doc.docs[0].data();
       setName(data.name);
+      setTable(data.table);
     } catch (err) {
       console.error(err);
       alert("An error occured while fetching user data");
@@ -137,10 +139,21 @@ function DashboardContent() {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
                   }}
                 >
                   {/* <Chart /> */}
+                  <Paper alignItems="center" justify="center">
+                  <Typography variant="h3" align="center"> Your Saved Table </Typography>
+                                      {table.map((course, index)=>(
+                                        <Paper key  ={course.id}sx={{ p:2, m: 2,backgroundColor: `#caf7b8`}}>
+                                          <Typography> {course.courseId + " " + course.courseName} </Typography>
+                                          <Typography> Section: {course.section } </Typography>
+                                          <Typography> {course.courseType + " " + course.section} </Typography>
+                                          <Typography> {course.schedule[0].dayDesc + " " + course.schedule[0].startTime + " - " + course.schedule[0].endTime} </Typography>
+                                          <Typography> Instructor :{ course.instructors[0].fullName}</Typography>
+                                        </Paper>
+                                      ))}
+                  </Paper>
                 </Paper>
               </Grid>
               {/* Recent Deposits */}
@@ -150,7 +163,6 @@ function DashboardContent() {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
                   }}
                 >
                   {/* <Deposits /> */}

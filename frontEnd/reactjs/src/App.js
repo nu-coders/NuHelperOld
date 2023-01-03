@@ -4,6 +4,7 @@ import Register from "./components/Register";
 import Reset from "./components/Reset";
 import Home from "./components/Home";
 import TableMaker from "./components/TableMaker";
+import NuTips from "./components/NuTips";
 function App() {
   return (
     <div className="app">
@@ -15,7 +16,7 @@ function App() {
             <Route exact path="/home" element={ <Home />} />
             <Route exact path="/tablemaker" element={ <TableMaker />} />
             <Route exact path="/roomlocator" element={ <Home />} />
-            <Route exact path="/nutips" element={ <Home />} />
+            <Route exact path="/nutips" element={ <NuTips />} />
 
           </Routes>
         </BrowserRouter>

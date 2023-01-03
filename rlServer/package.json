@@ -1,10 +1,10 @@
 {
   "scripts": {
-    "devStart": "nodemon roomLocator.js"
+    "api": "nodemon roomLocator.js"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "firebase-admin": "^11.4.0"
+    "firebase-admin": "^11.4.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"

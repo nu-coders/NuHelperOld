@@ -46,6 +46,8 @@ import { auth, db, logout } from "../firestore/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import Switch from '@mui/material/Switch';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
 const mdTheme = createTheme();
 
@@ -151,123 +153,70 @@ function DashboardContent() {
     const toggleDrawer = () => {
         setOpen(!open);
     };
-    const addCourse = async() => {
+
+    const [posts, setPosts] = useState([]);
+    const getPosts = async() => {
       let course = selectedCourse.split(" ")[0];
-      let selectedCoursesTemp = [...addedCourses, course];
+      let selectedCoursesTemp = [...course];
       let uniqeSelectedCoursesTemp = [...new Set(selectedCoursesTemp)];
       setAddedCourses(uniqeSelectedCoursesTemp );
+      let response ;
+      response =  await axios.post('//localhost:8085/getRoomPostsByRoomId', 
+      {
+        "roomId": course.replace('/',''),
+        }
+      );
+      console.log('data from server %j' , response.data);
+      setPosts(response.data);
     }
-    const removeCourse = (course)=>{
-    console.log('removed ' +course) 
-      let sectionsNew = [...section];
-      sectionsNew.splice(addedCourses.indexOf(course),1);
-      setSections(sectionsNew);
-      setAddedCourses(addedCourses.filter(code => code !== course));
 
-  }
     const [isClicked, setIsClicked] = React.useState(false);
     useEffect(() => {
       isClicked && setIsClicked(false);
    },[isClicked]);
 
-   const [tables, setTables]= React.useState([]);
-   const [useFilters, setUseFilters] = React.useState(false);
-   const [filters, setFilters] = React.useState({});
+  const onUpvote = async (post) => {
+    setIsClicked(true);
+    let response ;
+    response =  await axios.post('//localhost:8085/upvotePost',
+    {
+      "postId": post.postId,
+      "userId": userUid,
+      "roomId": post.roomId,
+      }
+    );
+    console.log('data from server ' + response.data);
+    setPosts(response.data);
+  }
 
+  const onDownvote = async (post) => {
+    setIsClicked(true);
+    let response ;
+    response =  await axios.post('//localhost:8085/downvotePost',
+    {
+      "postId": post.postId,
+      "userId": userUid,
+      "roomId": post.roomId,
+      }
+    );
+    console.log('data from server ' + response.data);
+    setPosts(response.data);
+  }
 
-   const getData = async () => {
-
-    setLoading(true);
-    console.log("using filters " + useFilters);
-    try{
-      let response;
-      let daysToGo =[];
-      if(state.sunday){
-        daysToGo.push("Sunday");
-      } 
-      if(state.monday){
-        daysToGo.push("Monday");
-      }
-      if(state.tuesday){
-        daysToGo.push("Tuesday");
-      }
-      if(state.wednesday){
-        daysToGo.push("Wednesday");
-      }
-      if(state.thursday){
-        daysToGo.push("Thursday");
-      }
-      if(state.friday){
-        daysToGo.push("Friday");
-      }
-      if(state.saturday){
-        daysToGo.push("Saturday");
-      }
-
-      response =  await axios.post('//localhost:8080/createTableNoClash', 
-      {
-        "id": addedCourses,
-        "useFilters": useFilters,
-        "filters": {
-          "noDays" : numberOfDays,
-          "DaysToGo" : daysToGo,
-        },
-        }
-      );
-      console.log('data from server' + response.data);
-      setTables(response.data);
-    } catch{
-      console.log('error');
-    }finally{
-      setLoading(false);
-    }
-
-    
+  const classes = {
+    root: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginRight: '8px',
+    },
+    body: {
+      fontSize: 16,
+    },
   };
-  
-  const saveTableToUser = async (table) => {
-    setLoading(true);
-    try {
-      let response;
-      response = await axios.post('//localhost:8080/saveTable', {
-        userId : userUid,
-        userEmail : email,
-        table: table,
-      });
-      console.log('data from server' + response);
-      window.alert('Table saved successfully');
-      navigate('/home');
-    } catch(err) {
-      console.log('error'+err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const [state, setState] = React.useState({
-    sunday: true,
-    monday: true,
-    tuesday: true,
-    wednesday: true,
-    thursday: true,
-    friday: false,
-    saturday: false,
-  });
-  const handleChangeCheckbox = (event) => {
-    console.log(event.target.name + ' ' + event.target.checked)
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
-  const { sunday, monday, tuesday, wednesday, thursday, friday, saturday } = state;
-  
-  const [switchState, setSwitchState] = React.useState(false);
-  const handleSwitch = (event) => {
-    setSwitchState(event.target.checked);
-    setUseFilters(event.target.checked);
-    console.log(useFilters);
-  };
-   useEffect(() => {
- 
-  },[tables])
   return (    
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -310,7 +259,7 @@ function DashboardContent() {
                                 <Autocomplete disablePortal id="combo-box-demo" options={coursesList} inputValue = {selectedCourse} onChange={(event, newValue) => { setSelectedCourse(newValue); }}  renderInput={(params) => <TextField {...params}   label="Search Courses" />} />
                             </Grid>
                             <Grid item xs={3} md={4} lg={3}>
-                                <Button sx={{backgroundColor: `#0077b6`}} variant="contained" onClick={() => {addCourse();}} >Add</Button>
+                                <Button sx={{backgroundColor: `#0077b6`}} variant="contained" onClick={() => {getPosts();}} >Posts</Button>
                             </Grid>
                     </Grid>
                 </Paper>
@@ -320,106 +269,30 @@ function DashboardContent() {
                     <Paper elevation={0} style={{minHeight: 400,maxHeight: 600, overflow: 'auto',backgroundColor: `#0077b6`}}>
 
                                 <List>
-                                  {tables && tables.map((table, index) => (
-
-                                    <Paper key  ={index}sx={{ p:2, m: 2,backgroundColor: `#caf0f8`, alignItems:'center'}} alignItems="center" justify="center">
-                                      <Typography> Table number {index+1} </Typography>
-                                      {table.map((course, index)=>(
-                                        <Paper key  ={course.id}sx={{ p:2, m: 2,backgroundColor: `#caf7b8`}}>
-                                          <Typography> {course.courseId + " " + course.courseName} </Typography>
-                                          <Typography> Section: {course.section } </Typography>
-                                          <Typography> {course.courseType + " " + course.section} </Typography>
-                                          <Typography> {course.schedule[0].dayDesc + " " + course.schedule[0].startTime + " - " + course.schedule[0].endTime} </Typography>
-                                          <Typography> Instructor :{ course.instructors[0].fullName}</Typography>
-                                        </Paper>
-                                      ))}
-                                      <Button align="center" variant="contained" onClick={()=>{saveTableToUser(table)}}>Choose Table</Button>
+                                  {posts&&posts.map((post) => (
+                                    <Paper key={post.id} button>
+                                      <div className={classes.root}>
+                                      <div className={classes.title}>{1}</div>
+                                      <div className={classes.body}>{2}</div>
+                                      <IconButton onClick={onUpvote}>
+                                        <ThumbUpIcon />
+                                      </IconButton>
+                                      <IconButton onClick={onDownvote}>
+                                        <ThumbDownIcon />
+                                      </IconButton>
+                                    </div>
                                     </Paper>
                                   ))}
-                                  {tables && tables.length === 0 && <Typography variant='h3' align="center" > No tables found </Typography>}
-                                                                     
+                                  {posts&&posts.length===0&&<ListItem key={1} button>
+                                      <ListItemText primary="No Posts Found" />
+                                      </ListItem>
+                                      }                               
                                 </List>
                     </Paper>
                 </Paper>
               </Grid>
               {/* Recent Deposits */}
-              <Grid item  xs={12} md={4} lg={3} sx={{flexDirection:'row'}}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', minHeight:350 ,backgroundColor: `#caf0f8` }}>
-                  <List>
-                    <Typography variant="h6"  align="center">Added Courses</Typography>
-                    <Divider/>
-                    {addedCourses && addedCourses.map((course) => (
-                        <ListItem key={course}>
-                            <ListItemText primary={course} />
-                            <ListItemSecondaryAction>
-                                <IconButton edge="end" aria-label="delete" onClick={() => {removeCourse(course);}}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                    ))}
-
-      
-      
-      
-                  
-                  </List>
-                </Paper>
-                <Paper sx={{ m:1, p: 2, display: 'flex', flexDirection: 'column', backgroundColor: `#caf0f8` }}>
-                  
-                  
-                  <FormControl component="fieldset" variant="standard">
-                    <FormControlLabel
-                      control={
-                        <Switch checked={switchState} onChange={handleSwitch} inputProps={{ 'aria-label': 'controlled',  }} color="secondary" />
-                      }
-                      label='Filters'
-                    />
-
-                  
-                    <Typography  align="center">Number of days to go </Typography>
-                    <Slider
-                        aria-label="Temperature"
-                        defaultValue={5}
-                        valueLabelDisplay="auto"
-                        step={1}
-                        marks={marks}
-                        min={1}
-                        max={6}
-                    />
-                            <FormGroup>
-
-                              <FormControlLabel control={
-                                <Checkbox checked={sunday} onChange={handleChangeCheckbox} name="sunday" />
-                                } label="Sunday" />
-                              
-                              <FormControlLabel control={
-                                <Checkbox checked={monday} onChange={handleChangeCheckbox} name="monday" />
-                                } label="Monday" />
-                              
-                              <FormControlLabel control={
-                                <Checkbox checked={tuesday} onChange={handleChangeCheckbox} name="tuesday" />
-                                } label="Tuesday" />
-                              
-                              <FormControlLabel control={
-                                <Checkbox checked={wednesday} onChange={handleChangeCheckbox} name="wednesday" />
-                                } label="Wednesday" />
-                              
-                              <FormControlLabel control={
-                                <Checkbox checked={thursday} onChange={handleChangeCheckbox} name="thursday" />
-                                } label="Thursday" />
-
-                         
                           
-                            </FormGroup>
-                          
-                                
-                    </FormControl>
-                </Paper>
-                <Paper sx={{ m:1, p: 2, display: 'flex', flexDirection: 'column', backgroundColor: `#caf0f8` }}>
-                  <Button sx={{backgroundColor: `#0077b6`}} variant="contained" onClick={() => {getData();}}  >Generate Tables</Button>
-                </Paper>
-              </Grid>              
             </Grid>
             <Copyright sx={{ pt: 4 }} />
           </Container>
@@ -429,6 +302,6 @@ function DashboardContent() {
   );
 }
 
-export default function TableMaker() {
+export default function NuTips() {
   return <DashboardContent />;
 }
