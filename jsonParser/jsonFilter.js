@@ -1,8 +1,12 @@
-const courses = require("./json/coursesDefault.json");
+const courses = JSON.parse(require("./json/coursesDefault.json"));
 var fs = require("fs");
+
+
+
 var temp = [];
-courses.forEach((course) => {
+courses.data.forEach((course) => {
   if (course.sessionDesc !== "Session 02" && course.schedules !== null) {
+    course.eventName.replace('\n',' ');
     delete course.areFeesApplicable;
     delete course.ceu;
     delete course.defaultCreditType;

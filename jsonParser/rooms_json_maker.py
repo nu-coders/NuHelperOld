@@ -36,6 +36,7 @@ floors = {
     "FUB1": "First floor of Tarek Khalil Building - FUB1",
     "F1": "First floor of Tarek Khalil Building - F1",
     "SUB1": "Second floor of Tarek Khalil Building - SUB1",
+    "RUB1": "Roof floor of Tarek Khalil Building - SUB1", # to be checked
     "BUB2": "Basement floor of Second -Main- Building - BUB2",
     "GUB2": "Ground floor of Second -Main- Building - GUB2",
     "FUB2": "First floor of Second -Main- Building - FUB2",
