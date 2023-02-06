@@ -90,6 +90,9 @@ function DashboardContent() {
       sectionValueNew[addedCourses.indexOf(course)] = event.target.value;
       setSections(sectionValueNew);
     };
+    const handleChangeSlider = (event, newValue) => {
+      setNumberOfDays(newValue);
+    };
     const [user, loading, error] = useAuthState(auth);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -377,7 +380,7 @@ function DashboardContent() {
                     />
 
                   
-                    <Typography  align="center">Number of days to go </Typography>
+                    <Typography  align="center">Number of days to go {numberOfDays}</Typography>
                     <Slider
                         aria-label="Temperature"
                         defaultValue={5}
@@ -386,6 +389,8 @@ function DashboardContent() {
                         marks={marks}
                         min={1}
                         max={6}
+                        value={numberOfDays}
+                        onChange={handleChangeSlider}
                     />
                             <FormGroup>
 

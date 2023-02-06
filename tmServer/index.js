@@ -1,6 +1,6 @@
 const {db} = require('./firebase.js');
 const dayjs = require('dayjs');
-const courses = require('./courses.json');
+const courses = require('./coursesspring23.json');
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
 const isBetween = require('dayjs/plugin/isBetween')
@@ -33,6 +33,7 @@ const addDocJson  = async function(course){
         sectionLetter = course.section.substring(course.section.length-1,course.section.length);
         sectionNumber = course.section.substring(0,course.section.length-1);
     }
+    console.log(course.eventName+" "+course.eventId);
     await docRef.set({
         id : docRef.id,
         credits : course.credits,
@@ -44,7 +45,6 @@ const addDocJson  = async function(course){
         schedule: course.schedules,
         seatsLeft: course.seatsLeft,
         section: course.section,
-        session: course.session,
         sectionLetter: sectionLetter,
         sectionNumber: sectionNumber,
     }).then(()=>{

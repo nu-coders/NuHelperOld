@@ -17,7 +17,8 @@ app.get('/listAllCourses', async(req, res) => {
 app.get('/getAllCourseNames', async(req, res) => {
     try{
         res.send(await getAllCoursesNamesCodes());
-    } catch (e) {
+        console.log("data");
+        } catch (e) {
         console.log(e);
         res.sendStatus(500);
     }
